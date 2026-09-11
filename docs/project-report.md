@@ -1,7 +1,7 @@
 # Nabíjení a vybíjení kondenzátoru a RC obvody v hudbě
 
 **Semestrální projekt č. 8 k předmětu AK3EJ | 2026**  
-*Autor: Multiinstrumentalista (kytara, baskytara, bicí)*  
+*Autor: Matěj Teplý*  
 *Univerzita Tomáše Bati ve Zlíně*
 
 > **Interaktivní webová simulace k projektu:**  
@@ -28,7 +28,7 @@
 
 ## 1. Úvod a fyzikální podstata kondenzátoru
 
-Jako multiinstrumentalista, který hraje na kytaru, baskytaru a bicí, se s úpravou zvuku setkávám z několika různých stran. U strunných nástrojů mě primárně zajímá barva tónu a chování vyšších harmonických složek, u bicích zase strmost náběhu úderu (attack) a délka jeho doznění (decay/release). Kondenzátor ve spojení s rezistorem představuje základní stavební kámen analogové elektroniky, který umožňuje oba tyto zdánlivě odlišné jevy popsat jednotným matematickým a fyzikálním aparátem. Tato práce proto propojuje teorii nabíjení a vybíjení kondenzátoru s kmitočtovou filtrací a časovým řízením hudebního signálu.
+Jako autor práce (Matěj Teplý) se s úpravou zvuku setkávám v hudební praxi při hře na kytaru, baskytaru a bicí z několika různých stran. U strunných nástrojů mě primárně zajímá barva tónu a chování vyšších harmonických složek, u bicích zase strmost náběhu úderu (attack) a délka jeho doznění (decay/release). Kondenzátor ve spojení s rezistorem představuje základní stavební kámen analogové elektroniky, který umožňuje oba tyto zdánlivě odlišné jevy popsat jednotným matematickým a fyzikálním aparátem. Tato práce proto propojuje teorii nabíjení a vybíjení kondenzátoru s kmitočtovou filtrací a časovým řízením hudebního signálu.
 
 Projekt č. 8 nejprve zavádí pojem kapacity, odvozuje diferenciální rovnici sériového RC obvodu a definuje časovou konstantu. Následně detailně analyticky řeší všechny tři povinné úkoly ze zadání a rozšiřuje je o modelové hudební aplikace. Všechny uvedené výsledky jsou exaktními analytickými výpočty a jejich počítačovými vizualizacemi.
 

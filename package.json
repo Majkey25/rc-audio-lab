@@ -2,6 +2,7 @@
   "name": "rc-audio-lab",
   "private": true,
   "version": "1.0.0",
+  "author": "Matěj Teplý",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -23,8 +24,9 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
-    "oxlint": "^1.81.0",
-    "typescript": "~6.0.2",
-    "vite": "^8.3.0"
+    "lucide-react": "^1.16.0",
+    "oxlint": "^1.49.0",
+    "typescript": "^5.9.3",
+    "vite": "^6.4.1"
   }
 }

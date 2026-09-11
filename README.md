@@ -19,7 +19,7 @@
 
 ## Overview
 
-**RC Audio Lab** bridges theoretical electromagnetic circuit theory with tangible musical applications. Built from the perspective of a multi-instrumentalist (guitarist, bassist, drummer), it demonstrates why series and parallel RC networks are fundamental to audio signal processing:
+**RC Audio Lab** bridges theoretical electromagnetic circuit theory with tangible musical applications. Developed by **Matěj Teplý**, this project combines theoretical circuit analysis with practical musical instrument audio behavior (electric guitar, bass guitar, drums). It demonstrates why series and parallel RC networks are fundamental to audio signal processing:
 
 * **Audio & Frequency Domain:** Simulates an AC coupling high-pass filter ($u_{\text{out}}$ across $R$) used in guitar pedals and tube amplifiers to prevent DC offset propagation and control bass clarity. Features live browser Web Audio playback comparing bypassed vs. filtered guitar ($E_2$), bass ($E_1$), and sine waves.
 * **Transient & Energy Domain:** Solves the first-order differential equation for DC charging and discharging steps. Numerically integrates Joule heating on the resistor to prove the exact analytical result:
@@ -59,34 +59,28 @@ rc-audio-lab/
 │   ├── physics.md          # Formal ODE derivations, energy proofs & DSP formulas
 │   └── references.md       # MIT OpenCourseWare citations and photo licenses
 ├── public/
-│   └── components/         # High-resolution component hardware photos
+│   └── components/         # High-resolution component macro photographs
 ├── src/
-│   ├── assets/             # Vector icons and styling resources
-│   ├── audio.ts            # Web Audio API engine with custom IIRFilterNode
-│   ├── physics.ts          # Core analytical models, ODEs, and energy integrals
-│   ├── ui.ts               # Localized string dictionaries (CZ / EN)
-│   ├── App.tsx             # Root application orchestrator
-│   ├── AudioView.tsx       # AC frequency Bode & waveform plots
-│   ├── TimeView.tsx        # DC transient voltage & energy plots
-│   ├── Circuit.tsx         # SVG schematic rendering
-│   ├── Controls.tsx        # Sliders, presets, and logarithmic scalers
-│   ├── Knob.tsx            # Interactive rotary hardware potentiometer
-│   └── Plot.tsx            # Canvas-based high-performance graphing
+│   ├── audio/              # Web Audio context, synthesis, and IIR filter engine
+│   ├── components/         # UI panels, oscilloscope, Bode plot & rotary knob
+│   ├── localization/       # Czech and English translation dictionaries
+│   ├── physics/            # Exact continuous formulas and ODE transient solver
+│   └── types/              # TypeScript domain types
 └── tests/
-    └── physics.test.ts     # Automated mathematical and boundary verification tests
+    └── physics.test.ts     # Automated unit test suite (energy balance & cutoff)
 ```
 
 ---
 
-## Local Development & Testing
+## Getting Started
 
 ### Prerequisites
-* Node.js $\ge 20.x$
-* npm $\ge 10.x$
+* **Node.js**: v18.0.0 or higher
+* **npm**: v9.0.0 or higher
 
-### Setup
+### Installation & Run
 ```bash
-# Clone repository
+# Clone the repository
 git clone https://github.com/Majkey25/rc-audio-lab.git
 cd rc-audio-lab
 
@@ -118,6 +112,14 @@ Every formula implemented in the lab is mathematically checked:
 * Energy balance: $W_C(\tau) + W_R(\tau) \equiv W_z(\tau)$
 
 Run `npm test` to execute all verification assertions.
+
+---
+
+## Author
+
+**Matěj Teplý**  
+*Univerzita Tomáše Bati ve Zlíně (UTB)*  
+Semestrální projekt č. 8 pro předmět AK3EJ (Elektrotechnika a elektronika).
 
 ---
 
