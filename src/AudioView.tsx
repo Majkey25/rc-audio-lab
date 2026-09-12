@@ -52,7 +52,7 @@ export function AudioView({ t, circuit, frequency, fc, hp, phase, sampleRate, si
           title={t('Amplitudový přenos horní propusti', 'High-pass magnitude')}
           traces={[
             { name: t('Ideální RC', 'Ideal RC'), color: RUST, points: frequencies.map(f => [f, highPass(circuit, f).gainDb]) },
-            ...(sampleRate ? [{
+            ...(sampleRate && fc < sampleRate / 2 ? [{
               name: t('Zvukový digitální filtr', 'Digital audio filter'),
               color: GREEN,
               dashed: true,

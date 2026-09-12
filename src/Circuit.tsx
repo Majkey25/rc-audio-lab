@@ -1,11 +1,15 @@
 import { engineering, format } from './physics'
 import type { Translator } from './ui'
-interface Props { t: Translator; r: number; c: number; audio: boolean; charge: number; current: number; voltage: number; discharging: boolean }
-export function Circuit({ t, r, c, audio, charge, current, voltage, discharging }: Props) {
+import { REPO } from './ui'
+import { Knob } from './Knob'
+interface Props { t: Translator; r: number; c: number; audio: boolean; charge: number; current: number; voltage: number; discharging: boolean; onResistanceChange: (value: number) => void }
+export function Circuit({ t, r, c, audio, charge, current, voltage, discharging, onResistanceChange }: Props) {
   const count = Math.min(8, Math.max(0, Math.round(Math.abs(charge) * 8)))
-  return <div className="circuit-wrap"><svg className="circuit" viewBox="0 0 660 205" role="img" aria-label={`${t('Zdroj, sériový kondenzátor','Source, series capacitor')} C ${engineering(c, 'F')}, R ${engineering(r, 'Ω')}. ${t('Výstup na R.','Output across R.')} ${audio ? 'AC' : `i = ${engineering(current, 'A')}`}`}>
+  return <div className="circuit-wrap"><div className="circuit-stage"><svg className="circuit" viewBox="0 0 790 205" role="group" aria-label={`${t('Zdroj, sériový kondenzátor','Source, series capacitor')} C ${engineering(c, 'F')}, R ${engineering(r, 'Ω')}. ${t('Výstup na R.','Output across R.')} ${audio ? 'AC' : `i = ${engineering(current, 'A')}`}`}>
     <g className="wire"><path d="M100 99V62H286 M310 62H480V91 M480 139V171 M100 139V171 M480 62H552" /><circle cx="100" cy="119" r="20" /><path d="M286 38V86M310 38V86" /><rect x="471" y="91" width="18" height="48" /><path d="M87 171H113M91 177H109M96 183H104M467 171H493M471 177H489M476 183H484" /></g>
     <circle cx="480" cy="62" r="4" fill="currentColor" /><circle cx="552" cy="62" r="3" fill="currentColor" />
+    <path d="M493 115H624" className="knob-leader" />
+    <foreignObject x="628" y="40" width="140" height="168"><Knob value={r} onChange={onResistanceChange} t={t}/></foreignObject>
     {audio ? <path d="M87 119Q94 101 100 119T113 119" className="wire" /> : <text x="100" y="125" textAnchor="middle" className="source-symbol">{discharging ? '0' : '+'}</text>}
     <text x="70" y="117" textAnchor="end">{audio ? 'Vin' : discharging ? '0 V' : `${format(voltage)} V`}</text>
     <text x="298" y="18" textAnchor="middle" className="component-label">C · {engineering(c, 'F')}</text>
@@ -16,5 +20,6 @@ export function Circuit({ t, r, c, audio, charge, current, voltage, discharging 
     <path d={current >= 0 ? 'M368 41H410L402 36M410 41L402 46' : 'M410 41H368L376 36M368 41L376 46'} fill="none" stroke="var(--rust)" strokeWidth="1.8" opacity={audio ? .65 : Math.min(1, Math.abs(current) * r / (voltage || 1) + .12)} />
     <text x="390" y="25" textAnchor="middle">{audio ? t('i střídá směr','i alternates') : t('směr i','i reference')}</text>
     <text x="330" y="193" textAnchor="middle" className="schematic-note">{audio ? t('Kondenzátor v sérii · výstup na rezistoru','Capacitor in series · output across the resistor') : t('Stejný obvod · napěťový skok nebo vybíjení do 0 V','Same circuit · voltage step or discharge to 0 V')}</text>
-  </svg><p className="micro">{audio ? t('Polarita se střídá. Šipka značí referenční směr proudu, nikoli pohyb elektronů.','AC polarity reverses. The arrow marks a reference direction, not literal electron motion.') : t('Značky na deskách představují náboj. Záporný proud znamená opačný směr než při nabíjení.','Plate symbols represent charge. Negative current means flow opposite to charging.')}</p></div>
+  </svg></div><p className="micro">{audio ? t('Šipka značí referenční směr proudu.','The arrow marks the current reference.') : t('Značky na deskách představují náboj. Záporný proud teče opačně než při nabíjení.','Plate symbols represent charge. Negative current flows opposite to charging.')}</p>
+  <details className="hardware-details"><summary>{t('Skutečné součástky','Real components')}</summary><div className="component-photos"><figure><img src={`${import.meta.env.BASE_URL}components/potentiometer.jpg`} alt={t('Otočný potenciometr','Rotary potentiometer')} loading="lazy"/><figcaption>{t('Potenciometr: jezdec mění odpor při otáčení hřídele.','Potentiometer: the wiper changes resistance as the shaft turns.')} Richard Wheeler (Zephyris), CC BY-SA 3.0.</figcaption></figure><figure><img src={`${import.meta.env.BASE_URL}components/capacitor.jpg`} alt={t('Řez fóliovým kondenzátorem','Film capacitor cross section')} loading="lazy"/><figcaption>{t('Pevný kondenzátor 3,3 nF v řezu. Kapacitu zde měníme výměnou součástky, ne otáčením.','A sectioned fixed 3.3 nF capacitor. Change the component to change capacitance; it has no knob.')} TubeTimeUS, CC BY-SA 4.0.</figcaption></figure></div><a href={`${REPO}/blob/main/docs/references.md#photographs`}>{t('Zdroje fotografií a licence','Photo sources and licenses')}</a></details></div>
 }

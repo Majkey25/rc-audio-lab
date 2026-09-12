@@ -1,129 +1,68 @@
-# RC Audio Lab ─┤├─
+# RC Audio Lab
 
-[![Deploy to GitHub Pages](https://github.com/Majkey25/rc-audio-lab/actions/workflows/deploy.yml/badge.svg)](https://github.com/Majkey25/rc-audio-lab/actions/workflows/deploy.yml)
-[![GitHub Pages](https://img.shields.io/badge/Live_Demo-GitHub_Pages-2ea44f?style=flat&logo=github)](https://majkey25.github.io/rc-audio-lab/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178c6?style=flat&logo=typescript)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-19-61dafb?style=flat&logo=react)](https://react.dev/)
-[![Vite](https://img.shields.io/badge/Vite-6-646cff?style=flat&logo=vite)](https://vitejs.dev/)
-[![Tests Passing](https://img.shields.io/badge/Tests-Passing-success?style=flat&logo=node.js)](https://github.com/Majkey25/rc-audio-lab)
+[![CI](https://github.com/Majkey25/rc-audio-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/Majkey25/rc-audio-lab/actions/workflows/ci.yml)
+[![Pages](https://github.com/Majkey25/rc-audio-lab/actions/workflows/deploy.yml/badge.svg)](https://github.com/Majkey25/rc-audio-lab/actions/workflows/deploy.yml)
+[![License: MIT](https://img.shields.io/badge/code-MIT-blue.svg)](LICENSE)
 
-> **Interactive educational simulation explaining the physics of capacitor charging, discharging, energy dissipation, and RC filter behaviors in electric guitars, bass guitars, dynamic processors, and audio amplifiers.**
+[Open the simulation](https://majkey25.github.io/rc-audio-lab/) · [Read the project report in Czech](docs/project-report.md) · [Download the Word document](docs/Zapoctovy_projekt_RC_obvody_v_hudbe.docx)
 
-🔗 **Live Simulation:** [https://majkey25.github.io/rc-audio-lab/](https://majkey25.github.io/rc-audio-lab/)  
-📄 **Full Academic Research Report (CZ):** [docs/project-report.md](docs/project-report.md)  
-📐 **Physics & DSP Derivations:** [docs/physics.md](docs/physics.md)  
-📚 **Literature & Media Attributions:** [docs/references.md](docs/references.md)
+An interactive simulation of capacitor charging, discharging and a first-order audio high-pass filter. Created by Matěj Teplý for an **AK3EJ credit project** at Tomas Bata University in Zlín. The interface defaults to Czech and includes an English switch.
 
----
+The music example is a coupling capacitor between amplifier stages. It blocks steady DC and, together with the next stage's input resistance, attenuates low frequencies. A complete passive guitar pickup also has inductance; this app does not model that entire circuit.
 
-## Overview
+## Using the simulation
 
-**RC Audio Lab** bridges theoretical electromagnetic circuit theory with tangible musical applications. Developed by **Matěj Teplý**, this project combines theoretical circuit analysis with practical musical instrument audio behavior (electric guitar, bass guitar, drums). It demonstrates why series and parallel RC networks are fundamental to audio signal processing:
+- Change R with the slider or the rotary control beside the resistor. Change C and inspect the cutoff and substituted equations.
+- Start the recorded guitar riff, then switch **A · Bypass** / **B · Filtered** while adjusting R or C. The second riff is the same recording transposed down an octave. A sine-wave source follows the frequency slider.
+- Select **Charging & energy** to inspect capacitor voltage, resistor voltage, current and energy. Pause, scrub time or jump directly to τ. Discharging retains the same voltage/current references, so resistor voltage and current are negative.
+- Open the component details for photographs and their credits. Keyboard arrows operate both sliders and the rotary control.
 
-* **Audio & Frequency Domain:** Simulates an AC coupling high-pass filter ($u_{\text{out}}$ across $R$) used in guitar pedals and tube amplifiers to prevent DC offset propagation and control bass clarity. Features live browser Web Audio playback comparing bypassed vs. filtered guitar ($E_2$), bass ($E_1$), and sine waves.
-* **Transient & Energy Domain:** Solves the first-order differential equation for DC charging and discharging steps. Numerically integrates Joule heating on the resistor to prove the exact analytical result:
-  $$W_R(\tau) = \frac{1}{2} C U^2 \left(1 - e^{-2}\right) \approx 0.432332 \cdot C U^2$$
-* **Physical Hardware Connection:** Direct tactile feedback through an interactive rotary potentiometer knob alongside high-resolution photographs of physical carbon track potentiometers and wound film capacitors.
-* **Bilingual Support:** Fully localized in Czech (default) and English.
+Audio uses one first-order recursive filter in an `AudioWorklet`. Its coefficients come from a bilinear transform prewarped at the analog cutoff. Parameter changes are smoothed without replacing filter nodes. The analog and digital responses agree at the cutoff; frequency warping is visible in the dashed digital trace. A/B keeps input gain unchanged, so attenuation remains audible.
 
----
+## Run locally
 
-## Key Features
+Use **Node.js 24 or newer** and npm. No backend, API keys or database are required.
 
-### 1. Dual Simulation Engines
-* **Frequency Analysis:** Real-time Bode plot (magnitude in dB and phase angle in degrees) and oscilloscope waveform displays showing amplitude reduction and phase lead $\phi = \arctan(1 / \omega R C)$.
-* **Transient Step Analysis:** Instantaneous voltage plots for $u_C(t)$, $u_R(t)$, source energy $W_z(t)$, stored electrostatic energy $W_C(t)$, and cumulative dissipated heat $W_R(t)$.
-
-### 2. High-Fidelity Discrete DSP Modeling
-Unlike standard Web Audio implementations that apply generic 2nd-order biquads with resonance peaks, this lab employs a **first-order IIR digital filter** via `IIRFilterNode` derived through the **Bilinear Transform with frequency prewarping**:
-$$K = \tan\left(\frac{\pi f_c}{f_s}\right), \quad b_0 = \frac{1}{K + 1}, \quad b_1 = -\frac{1}{K + 1}, \quad a_1 = \frac{K - 1}{K + 1}$$
-This guarantees a true $6\,\text{dB/octave}$ ($20\,\text{dB/decade}$) roll-off matching physical analog hardware.
-
-### 3. Musical Educational Presets
-1. **Full-range coupling:** $R = 100\,\mathrm{k\Omega}, C = 100\,\mathrm{nF} \implies f_c \approx 15.9\,\mathrm{Hz}$ (full bass preservation).
-2. **Mild bass cut:** $R = 100\,\mathrm{k\Omega}, C = 22\,\mathrm{nF} \implies f_c \approx 72.3\,\mathrm{Hz}$ (sub-bass cleanup).
-3. **Stronger bass cut:** $R = 100\,\mathrm{k\Omega}, C = 10\,\mathrm{nF} \implies f_c \approx 159\,\mathrm{Hz}$ (tight treble booster / overdrive pre-filter).
-4. **Extreme demonstration:** $R = 47\,\mathrm{k\Omega}, C = 4.7\,\mathrm{nF} \implies f_c \approx 720\,\mathrm{Hz}$ (audible band-limiting).
-
----
-
-## Project Structure
-
-```
-rc-audio-lab/
-├── .github/workflows/
-│   └── deploy.yml          # GitHub Pages automated CI/CD pipeline
-├── docs/
-│   ├── project-report.md   # Complete Czech semester research report (10 pages equivalent)
-│   ├── physics.md          # Formal ODE derivations, energy proofs & DSP formulas
-│   └── references.md       # MIT OpenCourseWare citations and photo licenses
-├── public/
-│   └── components/         # High-resolution component macro photographs
-├── src/
-│   ├── audio/              # Web Audio context, synthesis, and IIR filter engine
-│   ├── components/         # UI panels, oscilloscope, Bode plot & rotary knob
-│   ├── localization/       # Czech and English translation dictionaries
-│   ├── physics/            # Exact continuous formulas and ODE transient solver
-│   └── types/              # TypeScript domain types
-└── tests/
-    └── physics.test.ts     # Automated unit test suite (energy balance & cutoff)
-```
-
----
-
-## Getting Started
-
-### Prerequisites
-* **Node.js**: v18.0.0 or higher
-* **npm**: v9.0.0 or higher
-
-### Installation & Run
-```bash
-# Clone the repository
-git clone https://github.com/Majkey25/rc-audio-lab.git
-cd rc-audio-lab
-
-# Install dependencies
-npm install
-
-# Run automated physics tests
-npm test
-
-# Start local development server
+```sh
+npm ci
 npm run dev
 ```
 
-### Build & Verify
-```bash
-# Full validation: TypeScript check, linting, tests, and production bundle
+Open the URL printed by Vite, including `/rc-audio-lab/`.
+
+```sh
 npm run check
+npx playwright install chromium firefox
+npm run test:e2e
 ```
 
----
+`check` runs TypeScript, Oxlint, Node's built-in physics tests and the production build. Browser tests exercise both languages, the controls, charging/discharging, audio A/B, mobile layout and reduced motion. They also render the production audio processor in `OfflineAudioContext` and compare its measured amplitude/phase with the mathematical response. The recorded-sample test compares filtering of the same first three seconds, without using a microphone or claiming a hardware measurement.
 
-## Verification & Energy Balance
+## Implementation
 
-Every formula implemented in the lab is mathematically checked:
-* Initial condition: $u_C(0^+) = 0$, $u_R(0^+) = U$, $i(0^+) = U/R$
-* Half-power point: $|H(f_c)| = \frac{1}{\sqrt{2}} \approx -3.0103\,\text{dB}$
-* Time constant: $u_C(\tau) = U(1 - e^{-1}) \approx 0.632121\,U$
-* Dissipated heat up to $\tau$: $W_R(\tau) = \frac{1}{2} C U^2 (1 - e^{-2}) \approx 0.432332\,C U^2$
-* Energy balance: $W_C(\tau) + W_R(\tau) \equiv W_z(\tau)$
+| Path | Purpose |
+|---|---|
+| `src/physics.ts` | Pure RC equations and digital-filter coefficients |
+| `src/App.tsx` | Shared parameters and lifecycle |
+| `src/AudioView.tsx`, `src/TimeView.tsx` | Frequency and transient views |
+| `src/Circuit.tsx`, `src/Knob.tsx`, `src/Plot.tsx` | Schematic, rotary control and SVG plots |
+| `src/Explanation.tsx` | Equations, numerical substitutions and explanations |
+| `src/audio.ts`, `public/rc-processor.js` | Recorded riff, Web Audio lifecycle and processor |
+| `tests/physics.test.ts`, `tests/browser/` | Numeric and browser verification |
+| `docs/` | Report, derivations, assignment summary and references |
 
-Run `npm test` to execute all verification assertions.
+## Deployment
 
----
+Pull requests and pushes run [CI](.github/workflows/ci.yml). A successful CI run on `main` triggers the [Pages workflow](.github/workflows/deploy.yml). Deployment rebuilds the exact tested commit with `npm ci` and publishes `dist/` through the GitHub Pages artifact mechanism. Vite's base path is `/rc-audio-lab/`.
 
-## Author
+## Scope and sources
 
-**Matěj Teplý**  
-*Univerzita Tomáše Bati ve Zlíně (UTB)*  
-Semestrální projekt č. 8 pro předmět AK3EJ (Elektrotechnika a elektronika).
+The model uses an ideal voltage source, resistor and capacitor. It excludes leakage, ESR, pickup inductance and amplifier clipping. Visual animation is slowed; actual time is shown separately. Recorded audio is processed numerically, not sent through physical components.
 
----
+[Physics derivation](docs/physics.md) · [References and media credits](docs/references.md) · [Assignment summary](docs/assignment.md) · [AI use](docs/ai-use.md)
+
+The accompanying Czech report uses numbered references and declares AI assistance in text, analysis, implementation and document preparation. It is a credit project, not a bachelor/master thesis or a claim of laboratory measurement.
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
-Media assets in `public/components/` are licensed under [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/) as documented in [docs/references.md](docs/references.md).
+Original application code is available under the [MIT License](LICENSE). Component photographs retain their respective CC BY-SA licenses. The guitar recording is CC0. These licenses do not transfer rights to the UTB template/branding or third-party publications. See [media credits](docs/references.md#photographs).
