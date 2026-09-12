@@ -5,7 +5,7 @@
 .site-header nav a { text-decoration: none; }
 .site-header nav a:hover { text-decoration: underline; }
 .language { font-size: 12px; padding: 7px 12px; }
-main { max-width: 1520px; margin: auto; padding: 30px 32px 0; }
+main { max-width: 1520px; margin: auto; padding: 30px 32px 40px; }
 .intro h1 { font-size: clamp(25px, 2.4vw, 35px); font-weight: 650; letter-spacing: -.8px; line-height: 1.2; margin-bottom: 10px; }
 .intro p { color: var(--muted); font-size: 15px; margin-bottom: 25px; }
 .mode-tabs { display: flex; gap: 22px; border-bottom: 1px solid #c4d0db; margin-bottom: 25px; }
@@ -118,8 +118,6 @@ main { max-width: 1520px; margin: auto; padding: 30px 32px 0; }
 .energy-values { display: flex; flex-wrap: wrap; gap: 30px; font-size: 12px; }
 .energy-values strong { display: block; font-size: 21px; margin-top: 5px; font-weight: 600; }
 .checkpoint { border-left: 3px solid #528774; padding-left: 13px; margin-top: 19px; }
-footer { padding: 20px 32px; border-top: 1px solid var(--border); display: flex; gap: 30px; font-size: 12px; }
-footer span { flex: 1; color: var(--muted); }
 .skip-link { position: fixed; left: 20px; top: -100px; z-index: 10; background: white; padding: 12px; }
 .skip-link:focus { top: 10px; }
 @media(max-width:1200px) {
@@ -158,7 +156,5 @@ footer span { flex: 1; color: var(--muted); }
   .plot .marker-label { font-size: 11px; }
   .plot-readout { font-size: 10px; }
   .phase-panel { padding: 15px 13px; }
-  footer { padding: 18px 16px; flex-wrap: wrap; gap: 12px; }
-  footer span { flex-basis: 65%; }
 }
 @media(prefers-reduced-motion:reduce) { * { animation: none!important; transition: none!important; scroll-behavior: auto!important; } }

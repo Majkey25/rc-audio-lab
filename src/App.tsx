@@ -148,7 +148,6 @@ function App() {
       <p className="micro audio-note">{audioOn ? `${t('Vzorkování', 'Sample rate')}: ${format(sampleRate ?? 48000, 5)} Hz. ` : ''}{t('Zelená přerušovaná křivka ukazuje přenos digitálního filtru. Graf sinusovek zobrazuje ideální analogový obvod.', 'The green dashed curve shows the digital filter response. Sine plots show the ideal analog circuit.')}</p>
       {error && <p className="error" role="alert">{t('Zvuk se nepodařilo spustit nebo aktualizovat', 'Could not start or update audio')}: {error}</p>}
     </main>
-    <footer>RC Audio Lab<span>Matěj Teplý · AK3EJ · MIT</span><a href={REPO}>{t('Zdrojový kód', 'View source')} ↗</a></footer>
   </>
 }
 export default App
