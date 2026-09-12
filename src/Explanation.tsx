@@ -1,5 +1,5 @@
 import { engineering as eng, format } from './physics'
-import type { Direction, highPass, transient } from './physics'
+import type { Direction, Tap, response, transient } from './physics'
 import type { Translator } from './ui'
 
 function Calculation({ title, value, formula, substitution, meaning, open = false }: { title: string; value: string; formula: string; substitution: string; meaning: string; open?: boolean }) {
@@ -13,6 +13,7 @@ function Calculation({ title, value, formula, substitution, meaning, open = fals
 
 interface Props {
   t: Translator
+  tap: Tap
   mode: 'audio' | 'time'
   direction: Direction
   frequency: number
@@ -22,16 +23,18 @@ interface Props {
   position: number
   tau: number
   fc: number
-  hp: ReturnType<typeof highPass>
+  hp: ReturnType<typeof response>
   phase: number
   state: ReturnType<typeof transient>
 }
 
-export function Explanation({ t, mode, direction, frequency, resistance, capacitance, voltage, position, tau, fc, hp, phase, state }: Props) {
+export function Explanation({ t, tap, mode, direction, frequency, resistance, capacitance, voltage, position, tau, fc, hp, phase, state }: Props) {
   return <aside className="explanation-rail" aria-label={t('Vysvětlení a výpočty', 'Explanation and calculations')}>
     <h2>{t('Proč se to děje', 'Why this happens')}</h2>
     <p>{mode === 'audio'
-      ? t('Při nízké frekvenci má kondenzátor velkou reaktanci. Většina napětí zůstane na něm, méně na R. S rostoucí frekvencí reaktance klesá a na výstup projde větší část signálu.', 'At low frequencies the capacitor has a large reactance. Most voltage falls across it, leaving less across R. As frequency rises, its reactance falls and more signal reaches the output.')
+      ? tap === 'capacitor'
+        ? t('Při nízké frekvenci má kondenzátor velkou reaktanci a většina napětí je na něm. S rostoucí frekvencí napětí na C klesá. Výstup proto obsahuje méně výšek.', 'At low frequencies the capacitor has a large reactance and most voltage falls across it. As frequency rises, the voltage across C falls, so the output contains less treble.')
+        : t('Při nízké frekvenci má kondenzátor velkou reaktanci. Většina napětí zůstane na něm, méně na R. S rostoucí frekvencí reaktance klesá a na R zbývá větší část signálu.', 'At low frequencies the capacitor has a large reactance. Most voltage falls across it, leaving less across R. As frequency rises, its reactance falls and more signal appears across R.')
       : direction === 'charging'
         ? t('Zpočátku je kondenzátor vybitý. Proud přidává náboj na desky. Napětí na C roste, na R klesá, a proud se proto postupně zmenšuje.', 'At first the capacitor is empty. Current adds charge to the plates. Its voltage rises, leaving less across R, so the current gradually decreases.')
         : t('Nabitý kondenzátor napájí obvod. Jeho napětí exponenciálně klesá. Proud teče opačně než při nabíjení, ale výkon rezistoru zůstává kladný.', 'The charged capacitor supplies the circuit. Its voltage falls exponentially. Current reverses, but resistor power stays positive.')}</p>
@@ -47,7 +50,9 @@ export function Explanation({ t, mode, direction, frequency, resistance, capacit
       value={eng(fc, 'Hz')}
       formula="fc = 1 / (2πRC)"
       substitution={`1 / (2π × ${format(resistance, 5)} Ω × ${format(capacitance, 5)} F) = ${format(fc, 5)} Hz`}
-      meaning={t('Zde je amplituda výstupu 1/√2 vstupu: −3,0103 dB a fázový předstih +45°.', 'Here output amplitude is 1/√2 of input: −3.0103 dB and +45° phase lead.')}
+      meaning={tap === 'capacitor'
+        ? t('Zde je amplituda výstupu 1/√2 vstupu, tedy −3,0103 dB, a fáze se zpožďuje o 45°.', 'Here output amplitude is 1/√2 of input, so −3.0103 dB, and phase lags by 45°.')
+        : t('Zde je amplituda výstupu 1/√2 vstupu, tedy −3,0103 dB, a fáze předbíhá o 45°.', 'Here output amplitude is 1/√2 of input, so −3.0103 dB, and phase leads by 45°.')}
       open
     />
     {mode === 'audio' ? <>
@@ -68,8 +73,8 @@ export function Explanation({ t, mode, direction, frequency, resistance, capacit
       <Calculation
         title={t('Poměr amplitud |H|', 'Amplitude ratio |H|')}
         value={format(hp.magnitude)}
-        formula="|H| = x / √(1 + x²); x = 2πfRC"
-        substitution={`x = ${format(hp.omega * tau)} → ${format(hp.omega * tau)} / √(1 + ${format(hp.omega * tau)}²) = ${format(hp.magnitude)}`}
+        formula={tap === 'capacitor' ? '|H| = 1 / √(1 + x²); x = 2πfRC' : '|H| = x / √(1 + x²); x = 2πfRC'}
+        substitution={`x = ${format(hp.omega * tau)} → ${tap === 'capacitor' ? '1' : format(hp.omega * tau)} / √(1 + ${format(hp.omega * tau)}²) = ${format(hp.magnitude)}`}
         meaning={t('Tímto bezrozměrným poměrem násobíš vstupní amplitudu.', 'Multiply the input amplitude by this dimensionless ratio.')}
       />
       <Calculation
@@ -80,10 +85,10 @@ export function Explanation({ t, mode, direction, frequency, resistance, capacit
         meaning={t('Záporná hodnota znamená zeslabení. −3 dB je asi 70,7 % amplitudy, ne 50 %.', 'Negative means attenuation. −3 dB is about 70.7% amplitude, not 50%.')}
       />
       <Calculation
-        title={t('Fázový předstih φ', 'Phase lead φ')}
+        title={tap === 'capacitor' ? t('Fázové zpoždění φ', 'Phase lag φ') : t('Fázový předstih φ', 'Phase lead φ')}
         value={`${format(phase * 180 / Math.PI)}°`}
-        formula="φ = atan2(1, 2πfRC)"
-        substitution={`atan2(1, ${format(hp.omega * tau)}) × 180/π = ${format(phase * 180 / Math.PI)}°`}
+        formula={tap === 'capacitor' ? 'φ = −arctan(2πfRC)' : 'φ = atan2(1, 2πfRC)'}
+        substitution={`${tap === 'capacitor' ? `−arctan(${format(hp.omega * tau)})` : `atan2(1, ${format(hp.omega * tau)})`} × 180/π = ${format(phase * 180 / Math.PI)}°`}
         meaning={t('Porovnej vrcholy obou sinusovek na stejné časové ose.', 'Compare the peaks of both sine waves on the same time axis.')}
       />
     </> : <>

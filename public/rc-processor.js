@@ -1,9 +1,12 @@
 /* global AudioWorkletProcessor, registerProcessor */
-// One state pair per channel; coefficient and bypass ramps are sample accurate.
+// One first-order section per channel: y[n] = b0·x[n] + b1·x[n-1] - a1·y[n-1].
+// The coefficients come from the bilinear transform, so one processor covers both output taps.
 class RCProcessor extends AudioWorkletProcessor {
   static get parameterDescriptors() {
     return [
-      { name: 'b0', defaultValue: 0.99, minValue: 0, maxValue: 1 },
+      { name: 'b0', defaultValue: 0.99, minValue: -1, maxValue: 1 },
+      { name: 'b1', defaultValue: -0.99, minValue: -1, maxValue: 1 },
+      { name: 'a1', defaultValue: -0.98, minValue: -1, maxValue: 1 },
       { name: 'mix', defaultValue: 1, minValue: 0, maxValue: 1 },
     ]
   }
@@ -23,8 +26,10 @@ class RCProcessor extends AudioWorkletProcessor {
       for (let n = 0; n < output[channel].length; n++) {
         const x = source ? source[n] : 0
         const b0 = parameters.b0.length === 1 ? parameters.b0[0] : parameters.b0[n]
+        const b1 = parameters.b1.length === 1 ? parameters.b1[0] : parameters.b1[n]
+        const a1 = parameters.a1.length === 1 ? parameters.a1[0] : parameters.a1[n]
         const mix = parameters.mix.length === 1 ? parameters.mix[0] : parameters.mix[n]
-        const y = b0 * (x - x1) - (1 - 2 * b0) * y1
+        const y = b0 * x + b1 * x1 - a1 * y1
         output[channel][n] = x * (1 - mix) + y * mix
         x1 = x; y1 = y
       }

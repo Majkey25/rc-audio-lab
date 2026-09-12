@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { format } from './physics'
 import type { Translator } from './ui'
 
-export interface Trace { name: string; color: string; points: [number, number][]; dashed?: boolean }
+export interface Trace { name: string; color: string; points: [number, number][]; dashed?: boolean; id?: string }
 interface Props {
   t: Translator;
   title: string; traces: Trace[]; xDomain: [number, number]; yDomain: [number, number]
@@ -29,7 +29,7 @@ export function Plot({ t, title, traces, xDomain, yDomain, xLabel, yLabel, xTick
       }} onPointerLeave={() => setHover(null)}>
       {xTicks.map(t => <g key={t}><line className="gridline" x1={x(t)} y1={top} x2={x(t)} y2={height - bottom} /><text x={x(t)} y={height - bottom + 19} textAnchor="middle">{format(t)}</text></g>)}
       {yTicks.map(t => <g key={t}><line className="gridline" x1={left} y1={y(t)} x2={width - right} y2={y(t)} /><text x={left - 8} y={y(t) + 4} textAnchor="end">{format(t)}</text></g>)}
-      {traces.map(trace => <path key={trace.name} d={trace.points.map(([px, py], i) => `${i ? 'L' : 'M'}${x(px).toFixed(2)},${y(py).toFixed(2)}`).join(' ')} fill="none" stroke={trace.color} strokeWidth="2.3" strokeDasharray={trace.dashed ? '6 4' : undefined} />)}
+      {traces.map(trace => <path key={trace.name} data-testid={trace.id} d={trace.points.map(([px, py], i) => `${i ? 'L' : 'M'}${x(px).toFixed(2)},${y(py).toFixed(2)}`).join(' ')} fill="none" stroke={trace.color} strokeWidth="2.3" strokeDasharray={trace.dashed ? '6 4' : undefined} />)}
       {marker !== undefined && marker >= xDomain[0] && marker <= xDomain[1] && <g><line className="marker" x1={x(marker)} x2={x(marker)} y1={top} y2={height - bottom} /><text className="marker-label" x={Math.min(x(marker) + 5, width - 100)} y={top + 12}>{markerLabel}</text></g>}
       {cursor !== undefined && <line className="cursor" x1={x(cursor)} x2={x(cursor)} y1={top} y2={height - bottom} />}
       {hover !== null && <line className="hoverline" x1={x(hover)} x2={x(hover)} y1={top} y2={height - bottom} />}

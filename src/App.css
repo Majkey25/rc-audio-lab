@@ -33,6 +33,10 @@ main { max-width: 1520px; margin: auto; padding: 30px 32px 40px; }
 .instrument-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
 .instrument-heading span { color: var(--muted); font-size: 11px; }
 .circuit-stage { position: relative; }
+.tap-choice { display: grid; gap: 6px; margin: 4px 0 2px; }
+.tap-choice>span { font-size: 11px; color: var(--muted); }
+.tap-choice button { text-align: left; font-size: 12px; padding: 7px 10px; border: 1px solid var(--border); border-radius: 7px; background: #fff; cursor: pointer; }
+.tap-choice button[aria-pressed="true"] { background: var(--blue); border-color: var(--blue); color: #fff; }
 .knob-leader { fill: none; stroke: #b6c3d1; stroke-width: 1.6; stroke-dasharray: 4 4; }
 .circuit { display: block; width: 100%; min-height: 180px; color: #243852; }
 .wire { fill: none; stroke: #243852; stroke-width: 2; stroke-linecap: square; }

@@ -6,32 +6,34 @@ import { TimeView } from './TimeView'
 import { Explanation } from './Explanation'
 import { AudioEngine } from './audio'
 import { AudioControls } from './AudioControls'
-import type { AudioSettings, Sound } from './audio'
-import { PRESETS, cutoff, engineering as eng, format, highPass, timeConstant, transient } from './physics'
-import type { Direction } from './physics'
+import type { AudioSettings, Measurement, Sound } from './audio'
+import { PRESETS, cutoff, engineering as eng, format, response, timeConstant, transient } from './physics'
+import type { Direction, Tap } from './physics'
 import { REPO } from './ui'
 import type { Language, Translator } from './ui'
 import './App.css'
 
 const samples = (count: number, start: number, end: number) => Array.from({ length: count }, (_, i) => start + (end - start) * i / (count - 1))
-const presetCs = ['Plné basové pásmo', 'Mírné potlačení basů', 'Silnější potlačení basů', 'Výrazná ukázka']
+const presetCs = ['Tónová clona, jasná', 'Tónová clona, tmavá', 'Tónová clona, zavřená', 'Vazba, plné basy', 'Vazba, ořezané basy', 'Vazba, výrazná ukázka']
 
 
 function App() {
   const [language, setLanguage] = useState<Language>(() => { try { return localStorage.getItem('rc-language') === 'en' ? 'en' : 'cs' } catch { return 'cs' } })
   const t: Translator = (cs, en) => language === 'cs' ? cs : en
   const [mode, setMode] = useState<'audio' | 'time'>('audio')
-  const [resistance, setR] = useState<number>(100000), [capacitance, setC] = useState<number>(10e-9)
-  const [frequency, setFrequency] = useState(82.4), [voltage, setVoltage] = useState(5)
+  const [resistance, setR] = useState<number>(10000), [capacitance, setC] = useState<number>(47e-9)
+  const [tap, setTap] = useState<Tap>('capacitor')
+  const [frequency, setFrequency] = useState(1000), [voltage, setVoltage] = useState(5)
   const [direction, setDirection] = useState<Direction>('charging'), [position, setPosition] = useState(1), [playing, setPlaying] = useState(false), [normalized, setNormalized] = useState(false)
   const positionRef = useRef(1), engine = useRef<AudioEngine | null>(null)
   const [audioOn, setAudioOn] = useState(false), [busy, setBusy] = useState(false), [sound, setSound] = useState<Sound>('guitar'), [bypass, setBypass] = useState(false), [volume, setVolume] = useState(.3)
   const [sampleRate, setSampleRate] = useState<number | null>(null), [error, setError] = useState('')
-  const latestAudio = useRef<AudioSettings>({ resistance, capacitance, sound, frequency, bypass, volume })
+  const latestAudio = useRef<AudioSettings>({ resistance, capacitance, sound, frequency, bypass, volume, tap })
+  const [measurement, setMeasurement] = useState<Measurement | null>(null)
   const audioRequest = useRef(0)
   const circuit = useMemo(() => ({ resistance, capacitance }), [resistance, capacitance])
-  const tau = timeConstant(circuit), fc = cutoff(circuit), time = position * tau, state = transient(circuit, voltage, time, direction), hp = highPass(circuit, frequency), phase = hp.phase ?? 0
-  const exactPreset = PRESETS.findIndex(p => p.resistance === resistance && p.capacitance === capacitance)
+  const tau = timeConstant(circuit), fc = cutoff(circuit), time = position * tau, state = transient(circuit, voltage, time, direction), hp = response(circuit, frequency, tap), phase = hp.phase ?? 0
+  const exactPreset = PRESETS.findIndex(p => p.resistance === resistance && p.capacitance === capacitance && p.tap === tap)
 
   function seek(value: number) { setPlaying(false); positionRef.current = value; setPosition(value) }
   function changeCircuit(r: number, c: number) { setR(r); setC(c); seek(0) }
@@ -49,7 +51,12 @@ function App() {
     frame = requestAnimationFrame(tick); return () => cancelAnimationFrame(frame)
   }, [playing])
   useEffect(() => { const query = matchMedia('(prefers-reduced-motion: reduce)'); const stop = () => { if (query.matches) setPlaying(false) }; const hide = () => { if (document.hidden) setPlaying(false) }; query.addEventListener('change', stop); document.addEventListener('visibilitychange', hide); return () => { query.removeEventListener('change', stop); document.removeEventListener('visibilitychange', hide) } }, [])
-  useEffect(() => { latestAudio.current = { ...circuit, sound, frequency, bypass, volume }; engine.current?.update(latestAudio.current) }, [circuit, sound, frequency, bypass, volume])
+  useEffect(() => { latestAudio.current = { ...circuit, sound, frequency, bypass, volume, tap }; engine.current?.update(latestAudio.current) }, [circuit, sound, frequency, bypass, volume, tap])
+  useEffect(() => {
+    if (!audioOn) return
+    const timer = setInterval(() => setMeasurement(engine.current?.measure() ?? null), 120)
+    return () => clearInterval(timer)
+  }, [audioOn])
   useEffect(() => () => { audioRequest.current++; void engine.current?.stop() }, [])
 
   async function toggleAudio() {
@@ -93,7 +100,7 @@ function App() {
     <main>
       <div className="intro">
         <h1>{t('Simulace RC obvodu', 'RC circuit simulation')}</h1>
-        <p>{t('Vazební kondenzátor v pedálu nebo zesilovači: přenos basů, nabíjení a energie.', 'A coupling capacitor in a pedal or amplifier: bass response, charging and energy.')}</p>
+        <p>{t('Jeden rezistor a jeden kondenzátor. Podle toho, kde odebíráme výstup, z nich je tónová clona nebo vazební člen.', 'One resistor and one capacitor. Where you take the output decides whether they form a tone control or a coupling stage.')}</p>
       </div>
       <div className="mode-tabs" role="group" aria-label={t('Režim simulace', 'Simulation mode')}>
         <button aria-pressed={mode === 'audio'} onClick={() => { setMode('audio'); setPlaying(false) }}>{t('Zvuk a frekvence', 'Audio & frequency')}</button>
@@ -103,11 +110,16 @@ function App() {
         <aside className="parameter-rail" aria-label={t('Parametry obvodu', 'Circuit parameters')}>
           <label className="select-label">
             {t('Výukové nastavení', 'Educational preset')}
-            <select aria-label={t('Výukové nastavení', 'Educational preset')} value={exactPreset < 0 ? 'custom' : exactPreset} onChange={e => { const p = PRESETS[Number(e.target.value)]; if (p) changeCircuit(p.resistance, p.capacitance) }}>
+            <select aria-label={t('Výukové nastavení', 'Educational preset')} value={exactPreset < 0 ? 'custom' : exactPreset} onChange={e => { const p = PRESETS[Number(e.target.value)]; if (p) { changeCircuit(p.resistance, p.capacitance); setTap(p.tap) } }}>
               <option value="custom" disabled>{t('Vlastní hodnoty', 'Custom values')}</option>
               {PRESETS.map((p, i) => <option key={p.name} value={i}>{t(presetCs[i], p.name)}</option>)}
             </select>
           </label>
+          <div className="tap-choice" role="group" aria-label={t('Odbočka výstupu', 'Output tap')}>
+            <span>{t('Výstup měříme na', 'Output taken across')}</span>
+            <button aria-pressed={tap === 'capacitor'} onClick={() => setTap('capacitor')}>{t('kondenzátoru · dolní propust', 'capacitor · low-pass')}</button>
+            <button aria-pressed={tap === 'resistor'} onClick={() => setTap('resistor')}>{t('rezistoru · horní propust', 'resistor · high-pass')}</button>
+          </div>
           <p className="preset-note">{t('Modelové hodnoty, nikoli kopie konkrétního výrobku.', 'Teaching values, not a model of a named product.')}</p>
           <Control t={t} label={t('Odpor R', 'Resistance R')} value={resistance} min={10000} max={1000000} unit="Ω" log onChange={r => changeCircuit(r, capacitance)}/>
           <Control t={t} label={t('Kapacita C', 'Capacitance C')} value={capacitance} min={1e-9} max={1e-6} unit="F" log onChange={c => changeCircuit(resistance, c)}/>
@@ -133,17 +145,17 @@ function App() {
         <section className="instruments" aria-label={t('Schéma a grafy', 'Circuit and plots')}>
           <div className="instrument schematic">
             <div className="instrument-heading">
-              <h2>{t('Vazební RC obvod', 'The coupling circuit')}</h2>
-              <span>{t('Horní propust · výstup na R', 'High-pass · output across R')}</span>
+              <h2>{tap === 'capacitor' ? t('Tónová clona', 'Tone control') : t('Vazební člen', 'Coupling stage')}</h2>
+              <span>{tap === 'capacitor' ? t('Dolní propust · výstup na C', 'Low-pass · output across C') : t('Horní propust · výstup na R', 'High-pass · output across R')}</span>
             </div>
-            <Circuit t={t} r={resistance} c={capacitance} audio={mode === 'audio'} charge={voltage ? state.uc / voltage : 0} current={state.current} voltage={voltage} discharging={direction === 'discharging'} onResistanceChange={r => changeCircuit(r, capacitance)}/>
+            <Circuit t={t} tap={tap} r={resistance} c={capacitance} audio={mode === 'audio'} charge={voltage ? state.uc / voltage : 0} current={state.current} voltage={voltage} discharging={direction === 'discharging'} onResistanceChange={r => changeCircuit(r, capacitance)}/>
           </div>
           <AudioControls t={t} audioOn={audioOn} busy={busy} sound={sound} bypass={bypass} volume={volume} onToggle={() => void toggleAudio()} onSound={setSound} onBypass={setBypass} onVolume={setVolume}/>
           {mode === 'audio'
-            ? <AudioView t={t} circuit={circuit} frequency={frequency} fc={fc} hp={hp} phase={phase} sampleRate={sampleRate} sinePoints={sinePoints} frequencies={frequencies}/>
+            ? <AudioView t={t} circuit={circuit} tap={tap} frequency={frequency} fc={fc} hp={hp} phase={phase} sampleRate={sampleRate} sinePoints={sinePoints} frequencies={frequencies} measurement={measurement} audioOn={audioOn}/>
             : <TimeView t={t} resistance={resistance} capacitance={capacitance} voltage={voltage} direction={direction} normalized={normalizePlot} tau={tau} time={time} position={position} playing={playing} state={state} timeStates={timeStates} scale={scale} onSeek={seek} onPlayPause={playPause}/>}
         </section>
-        <Explanation t={t} mode={mode} direction={direction} frequency={frequency} resistance={resistance} capacitance={capacitance} voltage={voltage} position={position} tau={tau} fc={fc} hp={hp} phase={phase} state={state}/>
+        <Explanation t={t} tap={tap} mode={mode} direction={direction} frequency={frequency} resistance={resistance} capacitance={capacitance} voltage={voltage} position={position} tau={tau} fc={fc} hp={hp} phase={phase} state={state}/>
       </div>
       <p className="micro audio-note">{audioOn ? `${t('Vzorkování', 'Sample rate')}: ${format(sampleRate ?? 48000, 5)} Hz. ` : ''}{t('Zelená přerušovaná křivka ukazuje přenos digitálního filtru. Graf sinusovek zobrazuje ideální analogový obvod.', 'The green dashed curve shows the digital filter response. Sine plots show the ideal analog circuit.')}</p>
       {error && <p className="error" role="alert">{t('Zvuk se nepodařilo spustit nebo aktualizovat', 'Could not start or update audio')}: {error}</p>}
