@@ -118,9 +118,6 @@ main { max-width: 1520px; margin: auto; padding: 30px 32px 0; }
 .energy-values { display: flex; flex-wrap: wrap; gap: 30px; font-size: 12px; }
 .energy-values strong { display: block; font-size: 21px; margin-top: 5px; font-weight: 600; }
 .checkpoint { border-left: 3px solid #528774; padding-left: 13px; margin-top: 19px; }
-.learn-more { margin-top: 35px; padding: 28px 0 35px; border-top: 1px solid var(--border); display: grid; grid-template-columns: 1.1fr 1fr; gap: 65px; max-width: 1150px; }
-.learn-more p,.learn-more li { font-size: 13px; color: #435972; line-height: 1.75; }
-.learn-more ul { padding-left: 20px; }
 footer { padding: 20px 32px; border-top: 1px solid var(--border); display: flex; gap: 30px; font-size: 12px; }
 footer span { flex: 1; color: var(--muted); }
 .skip-link { position: fixed; left: 20px; top: -100px; z-index: 10; background: white; padding: 12px; }
@@ -161,7 +158,6 @@ footer span { flex: 1; color: var(--muted); }
   .plot .marker-label { font-size: 11px; }
   .plot-readout { font-size: 10px; }
   .phase-panel { padding: 15px 13px; }
-  .learn-more { grid-template-columns: 1fr; gap: 16px; }
   footer { padding: 18px 16px; flex-wrap: wrap; gap: 12px; }
   footer span { flex-basis: 65%; }
 }

@@ -85,7 +85,7 @@ function App() {
       <a className="brand" href="#"><span aria-hidden="true">─┤├─</span> RC Audio Lab</a>
       <nav aria-label={t('Projekt', 'Project')}>
         <a href={`${REPO}/blob/main/docs/project-report.md`}>{t('Zápočtový projekt', 'Project report')} ↗</a>
-        <a href="#sources">{t('Zdroje', 'Sources')}</a>
+        <a href={`${REPO}/blob/main/docs/references.md`}>{t('Zdroje', 'Sources')} ↗</a>
         <a href={REPO}>GitHub ↗</a>
         <button className="language" onClick={() => setLanguage(language === 'cs' ? 'en' : 'cs')} aria-label={t('Switch to English', 'Přepnout do češtiny')}>{language === 'cs' ? 'English' : 'Čeština'}</button>
       </nav>
@@ -147,23 +147,6 @@ function App() {
       </div>
       <p className="micro audio-note">{audioOn ? `${t('Vzorkování', 'Sample rate')}: ${format(sampleRate ?? 48000, 5)} Hz. ` : ''}{t('Zelená přerušovaná křivka ukazuje přenos digitálního filtru. Graf sinusovek zobrazuje ideální analogový obvod.', 'The green dashed curve shows the digital filter response. Sine plots show the ideal analog circuit.')}</p>
       {error && <p className="error" role="alert">{t('Zvuk se nepodařilo spustit nebo aktualizovat', 'Could not start or update audio')}: {error}</p>}
-      <section className="learn-more" id="sources">
-        <div>
-          <h2>{t('Kde to potkáš v hudbě', 'Where this lives in music')}</h2>
-          <p>{t('Vazební kondenzátor odděluje stejnosměrná pracovní napětí zesilovacích stupňů. Se vstupním odporem dalšího stupně určuje přenos basů. Menší C zvýší mezní frekvenci. Před zkreslujícím stupněm tak může změnit, jak silně basy tento stupeň budí.', 'A coupling capacitor separates DC operating points of amplifier stages. With the next stage’s input resistance, it sets bass transmission. Smaller C raises cutoff. Before distortion, it can change how strongly bass drives that stage.')}</p>
-          <p>{t('Pasivní magnetický snímač má také indukčnost. Jeho tónová clona s kabelem a zátěží je složitější. Zde modelujeme jednoduchou vazbu za ideálním zdrojem, nikoli celý snímač.', 'A passive magnetic pickup also has inductance. Its tone control, cable and load form a more complex circuit. Here we model simple coupling after an ideal source, not a complete pickup.')}</p>
-        </div>
-        <div>
-          <h2>{t('Zdroje a předpoklady', 'Sources & assumptions')}</h2>
-          <p>{t('Ideální R, C a zdroj. Bez odporu zdroje, svodu, ESR, indukčnosti snímače a přebuzení. R představuje vstupní zátěž dalšího stupně.', 'Ideal R, C and source. No source resistance, leakage, ESR, pickup inductance or clipping. R represents the next stage’s input load.')}</p>
-          <ul>
-            <li><a href="https://ocw.mit.edu/courses/ec-s06-practical-electronics-fall-2004/5d70e7c37b7dc19e1e947e7a7b1d4ac6_MITEC_S06F04_lec04.pdf">MIT · RC {t('obvody a filtry', 'circuits and filters')} ↗</a></li>
-            <li><a href={`${REPO}/blob/main/docs/physics.md`}>{t('Odvození a digitální model', 'Derivation and digital model')} ↗</a></li>
-            <li><a href={`${REPO}/blob/main/docs/references.md`}>{t('Přehled zdrojů a licencí', 'References and licenses')} ↗</a></li>
-            <li><a href={`${REPO}/blob/main/docs/project-report.md`}>{t('Zápočtový projekt', 'University report')} ↗</a></li>
-          </ul>
-        </div>
-      </section>
     </main>
     <footer>RC Audio Lab<span>Matěj Teplý · AK3EJ · MIT</span><a href={REPO}>{t('Zdrojový kód', 'View source')} ↗</a></footer>
   </>
