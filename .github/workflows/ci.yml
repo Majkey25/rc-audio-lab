@@ -18,6 +18,14 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npx playwright install --with-deps chromium firefox
+      # Firefox waits for an output device before AudioContext.resume() settles, and the runner has none.
+      - name: Provide a dummy audio sink
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pulseaudio pulseaudio-utils
+          pulseaudio --start --exit-idle-time=-1
+          pactl load-module module-null-sink sink_name=dummy
+          pactl set-default-sink dummy
       - run: npm run test:e2e -- --workers=2
       - uses: actions/upload-artifact@v4
         if: failure()

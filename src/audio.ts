@@ -4,6 +4,15 @@ import type { Circuit } from './physics'
 export type Sound = 'guitar' | 'bass' | 'sine'
 export interface AudioSettings extends Circuit { sound: Sound; frequency: number; bypass: boolean; volume: number }
 
+function resumeAudio(context: AudioContext): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => reject(new Error('The audio output device did not start within 15 seconds.')), 15000)
+    context.resume().then(
+      () => { clearTimeout(timeout); resolve() },
+      error => { clearTimeout(timeout); reject(error) },
+    )
+  })
+
 async function makeRiff(context: AudioContext, sample: AudioBuffer, octave: number): Promise<AudioBuffer> {
   const rate = context.sampleRate, step = 0.42
   const notes = [0, 0, 3, 5, 0, 7, 5, 3]
@@ -59,7 +68,7 @@ export class AudioEngine {
     try {
       audioCoefficients({ resistance: 10000, capacitance: 1e-9 }, context.sampleRate)
       if (context.sampleRate <= 40000) throw new Error('Audio requires a sample rate above 40 kHz.')
-      await context.resume()
+      await resumeAudio(context)
       const response = await fetch(`${import.meta.env.BASE_URL}audio/guitar-f2.flac`)
       if (!response.ok) throw new Error(`Guitar sample could not load: HTTP ${response.status}.`)
       const [sample] = await Promise.all([
@@ -69,7 +78,7 @@ export class AudioEngine {
       const processor = new AudioWorkletNode(context, 'rc-highpass', { outputChannelCount: [1] })
       const [guitar, bass] = await Promise.all([makeRiff(context, sample, 0), makeRiff(context, sample, -12)])
       return new AudioEngine(context, processor, guitar, bass, settings)
-    } catch (cause) { await context.close(); throw cause }
+    } catch (cause) { void context.close().catch(() => {}); throw cause }
   }
 
   get sampleRate(): number { return this.context.sampleRate }
@@ -91,7 +100,7 @@ export class AudioEngine {
   }
 
   async start() {
-    await this.context.resume()
+    await resumeAudio(this.context)
     this.master.gain.setTargetAtTime(this.settings.volume * .4, this.context.currentTime, .02)
   }
 

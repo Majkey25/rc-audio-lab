@@ -16,6 +16,8 @@ import './App.css'
 const samples = (count: number, start: number, end: number) => Array.from({ length: count }, (_, i) => start + (end - start) * i / (count - 1))
 const presetCs = ['Plné basové pásmo', 'Mírné potlačení basů', 'Silnější potlačení basů', 'Výrazná ukázka']
 
+}
+
 function App() {
   const [language, setLanguage] = useState<Language>(() => { try { return localStorage.getItem('rc-language') === 'en' ? 'en' : 'cs' } catch { return 'cs' } })
   const t: Translator = (cs, en) => language === 'cs' ? cs : en
@@ -63,7 +65,8 @@ function App() {
         if (request !== audioRequest.current) { await next.stop(); return }
         engine.current = next
         next.update(latestAudio.current)
-        await next.start(); setSampleRate(next.sampleRate); setAudioOn(true)
+        await next.start()
+        setSampleRate(next.sampleRate); setAudioOn(true)
       }
     } catch (cause) {
       if (engine.current) { await engine.current.stop(); engine.current = null }
