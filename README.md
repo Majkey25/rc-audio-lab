@@ -6,14 +6,16 @@
 
 [Open the simulation](https://majkey25.github.io/rc-audio-lab/) · [Read the project report in Czech](docs/project-report.md) · [Download the Word document](docs/Zapoctovy_projekt_RC_obvody_v_hudbe.docx)
 
-An interactive simulation of capacitor charging, discharging and a first-order audio high-pass filter. Created by Matěj Teplý for an **AK3EJ credit project** at Tomas Bata University in Zlín. The interface defaults to Czech and includes an English switch.
+An interactive simulation of capacitor charging, discharging and a first-order audio filter. Created by Matěj Teplý for an **AK3EJ credit project** at Tomas Bata University in Zlín. The interface defaults to Czech and includes an English switch.
 
-The music example is a coupling capacitor between amplifier stages. It blocks steady DC and, together with the next stage's input resistance, attenuates low frequencies. A complete passive guitar pickup also has inductance; this app does not model that entire circuit.
+One resistor and one capacitor give two different circuits, and the output tap decides which. Across the capacitor they form a low-pass, the arrangement behind a guitar tone control. Across the resistor they form a high-pass, the coupling stage that blocks steady DC between amplifier stages. The schematic swaps the two parts to match the tap, and the equations, plots and audio all follow it.
+
+Two analysers, one before the filter and one after it, estimate the response of the running audio and draw it over the analytic curve. With white noise as the source the measured estimate tracks the RC formula across the audio band and bends away near 20 kHz, where the bilinear transform warps the frequency axis. A complete passive guitar pickup also has inductance; this app does not model that entire circuit.
 
 ## Using the simulation
 
-- Change R with the slider or the rotary control beside the resistor. Change C and inspect the cutoff and substituted equations.
-- Start the recorded guitar riff, then switch **A · Bypass** / **B · Filtered** while adjusting R or C. The second riff is the same recording transposed down an octave. A sine-wave source follows the frequency slider.
+- Switch the output tap between the capacitor and the resistor. Change R with the slider or the rotary control beside the resistor, change C, and inspect the cutoff and substituted equations.
+- Start the recorded guitar riff, then switch **A · Bypass** / **B · Filtered** while adjusting R or C. The low-pass is the audible one: at 10 kΩ and 47 nF it removes 16.4 dB of the recording's energy above 2 kHz. The second riff is the same recording transposed down an octave, a sine follows the frequency slider, and white noise drives the measurement.
 - Select **Charging & energy** to inspect capacitor voltage, resistor voltage, current and energy. Pause, scrub time or jump directly to τ. Discharging retains the same voltage/current references, so resistor voltage and current are negative.
 - Open the component details for photographs and their credits. Keyboard arrows operate both sliders and the rotary control.
 
