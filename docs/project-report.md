@@ -9,6 +9,7 @@ Zápočtový projekt č. 8 · AK3EJ Elektromagnetické jevy v informatice · 202
 ## Obsah
 
 - [Značení](#značení)
+- [Úvod](#úvod)
 - [Kondenzátor a energie elektrického pole](#kondenzátor-a-energie-elektrického-pole)
 - [Nabíjení a vybíjení RC obvodu](#nabíjení-a-vybíjení-rc-obvodu)
 - [Časová konstanta a doba náběhu](#časová-konstanta-a-doba-náběhu)
@@ -20,12 +21,15 @@ Zápočtový projekt č. 8 · AK3EJ Elektromagnetické jevy v informatice · 202
 - [Bicí a časové řízení signálu](#bicí-a-časové-řízení-signálu)
 - [Elektrické pole a kontrola modelu](#elektrické-pole-a-kontrola-modelu)
 - [Interaktivní simulace k zápočtovému projektu](#interaktivní-simulace-k-zápočtovému-projektu)
+- [Závěr](#závěr)
+- [Použití nástrojů umělé inteligence](#použití-nástrojů-umělé-inteligence)
+- [Seznam použité literatury](#seznam-použité-literatury)
 
 # Značení
 
 R odpor \[Ω\]; C kapacita \[F\]; U konstantní napětí zdroje \[V\]; u<sub>C</sub>, u<sub>R</sub> okamžitá napětí \[V\]; i proud \[A\]; τ časová konstanta \[s\]; f kmitočet \[Hz\]; H komplexní napěťový přenos; W energie \[J\]. Dolní propust je označena DP, horní propust HP. Desetinná čárka se používá v textu a tabulkách.
 
-Úvod
+# Úvod
 
 Tento zápočtový projekt řeší nabíjení a vybíjení kondenzátoru v RC obvodu a jeho použití jako jednoduchého filtru. Vychází ze zadání projektu č. 8 v předmětu AK3EJ Elektromagnetické jevy v informatice. Povinná část zahrnuje vztahy pro napětí na rezistoru a kondenzátoru, napětí kondenzátoru v čase jedné časové konstanty a energii přeměněnou na teplo do stejného okamžiku. \[1\]
 
@@ -37,9 +41,11 @@ Výpočty vycházejí z ideálních součástek. Číselné hodnoty zvolené nad
 
 # Kondenzátor a energie elektrického pole
 
-Kondenzátor tvoří dvě vodivé elektrody oddělené izolantem. Při nabíjení se na jedné elektrodě hromadí kladný náboj a na druhé záporný náboj stejné velikosti. Mezi elektrodami vzniká elektrické pole. Kapacita C vyjadřuje, jak velký náboj q připadá na jednotku napětí u<sub>C</sub>. Pro lineární kondenzátor platí q = Cu_C. Jednotkou kapacity je farad, tedy coulomb na volt. \[3, kap. 5.1–5.2\]
+Kondenzátor tvoří dvě vodivé elektrody oddělené izolantem. Při nabíjení se na jedné elektrodě hromadí kladný náboj a na druhé záporný náboj stejné velikosti. Mezi elektrodami vzniká elektrické pole. Kapacita C vyjadřuje, jak velký náboj q připadá na jednotku napětí u<sub>C</sub>. Pro lineární kondenzátor platí q = Cu<sub>C</sub>. Jednotkou kapacity je farad, tedy coulomb na volt. \[3, kap. 5.1–5.2\]
 
-$`q\  = \ C\ u_{C}\ \ \ \ \ ;\ \ \ \ \ C\  = \ \varepsilon ₀\ \varepsilon_{r}(S/d)\ \ \ \ \ ;\ \ \ \ \ E\  \approx \ u_{C}/d`$
+```math
+q\  = \ C\ u_{C}\ \ \ \ \ ;\ \ \ \ \ C\  = \ \varepsilon_{0}\varepsilon_{r}\left( \frac{S}{d} \right)\ \ \ \ ;\ \ \ \ \ E\  \approx \frac{u_{C}}{d}
+```
 
 U deskového kondenzátoru označuje S plochu jedné elektrody, d vzdálenost elektrod, ε₀ permitivitu vakua a ε<sub>r</sub> relativní permitivitu dielektrika. Vztah pro kapacitu předpokládá homogenní materiál a zanedbává okraje desek. Při větší ploše nebo menší vzdálenosti elektrod je kapacita větší. Elektrická intenzita E se udává ve V/m a popisuje sílu působící na jednotkový kladný náboj.
 
@@ -47,9 +53,13 @@ U deskového kondenzátoru označuje S plochu jedné elektrody, d vzdálenost el
 
 Přesunutí malého náboje dq mezi elektrodami vyžaduje práci dW = u<sub>C</sub> dq. Napětí během nabíjení roste, takže nelze celou práci spočítat jako konečné napětí násobené konečným nábojem. Je nutné integrovat průběžnou hodnotu q/C. Výsledkem je energie elektrického pole: \[3, kap. 5.4\]
 
-$`W_{C}\  = \ \int ₀\hat{}q\ (q'/C)\ dq'\  = \ q²/(2C)\  = \ ½\ C\ u_{C}²`$
+```math
+W_{C}\  = \ \int_{0}^{q}{\left( \frac{q'}{C} \right)dq'} = \frac{q^{2}}{2C} = \ \frac{1}{2}\ C\ u_{C}^{2}
+```
 
-$`w\_ e\  = \ ½\ \varepsilon ₀\ \varepsilon_{r}\ E²`$
+```math
+w_{e} = \ \frac{1}{2}\ \varepsilon_{0}\varepsilon_{r}\ E^{2}
+```
 
 Veličina w<sub>e</sub> je objemová hustota energie v J/m³. Při zdvojnásobení napětí na stejném kondenzátoru vzroste energie čtyřikrát. Ideální kondenzátor může uloženou energii vrátit do obvodu. Rezistor ji mění na teplo, které se tímto způsobem zpět na elektrickou energii nepřemění.
 
@@ -63,21 +73,28 @@ Skutečný kondenzátor má ztráty, svod a parazitní indukčnost. V dalších 
 
 Uvažujme ideální zdroj stálého napětí U, rezistor R \> 0 a kondenzátor C \> 0 v sérii. Zdroj připojíme v čase t = 0 k vybitému kondenzátoru. Proud i je kladný při nabíjení kladné elektrody. Napětí u<sub>R</sub> je úbytek ve směru i, napětí u<sub>C</sub> měříme od kladné elektrody k záporné. \[5, kap. 7.6\]
 
-![Obrázek z projektu](report-assets/media/image5.png)
-
-Obrázek 1 Sériový RC obvod a orientace veličin. Zdroj lze nastavit na U pro nabíjení nebo na 0 V pro vybíjení. Vlastní schéma.
+<figure>
+![Obrázek z projektu](report-assets/media/image3.png)
+<figcaption><p>Obrázek 1 Sériový RC obvod a orientace veličin. Zdroj lze nastavit na U pro nabíjení nebo na 0 V pro vybíjení. Vlastní schéma.</p></figcaption>
+</figure>
 
 ## Diferenciální rovnice
 
-Druhý Kirchhoffův zákon dává U = u<sub>R</sub> + u<sub>C</sub>. Z Ohmova zákona je u<sub>R</sub> = Ri. Definice proudu i = dq/dt a vztah q = Cu_C vedou k i = C du_C/dt. Dosazením získáme rovnici prvního řádu:
+Druhý Kirchhoffův zákon dává U = u<sub>R</sub> + u<sub>C</sub>. Z Ohmova zákona je u<sub>R</sub> = Ri. Definice proudu i = dq/dt a vztah q = Cu<sub>C</sub> vedou k i = C du<sub>C</sub>/dt. Dosazením získáme rovnici prvního řádu:
 
-$`RC\ du_{C}/dt\  + \ u_{C}\  = \ U\ \ \ \ \ ;\ \ \ \ \ u_{C}(0)\  = \ 0`$
+```math
+RC\frac{du_{C}}{dt} + \ u_{C}\  = \ U\ \ \ \ \ ;\ \ \ \ \ u_{C}(0) = \ 0
+```
 
-Proměnné oddělíme jako du_C/(U − u<sub>C</sub>) = dt/(RC). Integrací mezi počátečním a okamžitým stavem vznikne bezrozměrný logaritmus ln\[U/(U − u<sub>C</sub>)\] = t/(RC). Po úpravě dostáváme: \[5, kap. 7.6.1\]
+Proměnné oddělíme jako du<sub>C</sub>/(U − u<sub>C</sub>) = dt/(RC). Integrací mezi počátečním a okamžitým stavem vznikne bezrozměrný logaritmus ln\[U/(U − u<sub>C</sub>)\] = t/(RC). Po úpravě dostáváme: \[5, kap. 7.6.1\]
 
-$`u_{C}(t)\  = \ U(1\  - \ e\hat{}( - t/RC))\ \ \ \ \ ;\ \ \ \ \ u_{R}(t)\  = \ Ue\hat{}( - t/RC)`$
+```math
+u_{C}(t) = \ U\left( 1\  - \ e^{- \frac{t}{RC}} \right)\ \ \ \ ;\ \ \ \ \ u_{R}(t) = \ Ue^{- \frac{t}{RC}}
+```
 
-$`i(t)\  = \ (U/R)e\hat{}( - t/RC)`$
+```math
+i(t) = \ \left( \frac{U}{R} \right)e^{- \frac{t}{RC}}
+```
 
 Na začátku je u<sub>C</sub> = 0 a i = U/R. Jak kondenzátor získává náboj, jeho napětí roste a proud klesá. Pro t → ∞ se u<sub>C</sub> blíží U a proud nule. Při konečném proudu se napětí kondenzátoru mění spojitě; jeho skok by vyžadoval proudový impulz.
 
@@ -85,7 +102,9 @@ Na začátku je u<sub>C</sub> = 0 a i = U/R. Jak kondenzátor získává náboj,
 
 Při vybíjení nahradíme zdroj zkratem a zachováme orientace veličin. Pravá strana diferenciální rovnice je nulová. Pro počáteční napětí U₀ platí: \[5, kap. 7.6.2\]
 
-$`u_{C}(t)\  = \ U₀e\hat{}( - t/RC)\ \ \ \ \ ;\ \ \ \ \ i(t)\  = \  - (U₀/R)e\hat{}( - t/RC)`$
+```math
+u_{C}(t) = \ U_{0}e^{- \frac{t}{RC}}\ \ \ \ ;\ \ \ \ \ i(t) = \  - \left( \frac{U_{0}}{R} \right)e^{- \frac{t}{RC}}
+```
 
 Napětí rezistoru je u<sub>R</sub> = Ri = −u<sub>C</sub>. Záporný proud označuje obrácený směr, nikoli chybu ve výpočtu. Oba děje sjednocuje vztah u<sub>C</sub>(t) = U<sub>∞</sub> + \[u<sub>C</sub>(0) − U<sub>∞</sub>\]e<sup>−t/RC</sup>, kde U<sub>∞</sub> je nová ustálená hodnota napětí.
 
@@ -93,7 +112,10 @@ Napětí rezistoru je u<sub>R</sub> = Ri = −u<sub>C</sub>. Záporný proud ozn
 
 Časová konstanta τ = RC má jednotku sekunda, protože Ω·F = (V/A)·(A·s/V) = s. Po jedné časové konstantě zbývá e⁻¹ ≈ 36,8 % původního rozdílu mezi okamžitým a konečným napětím. Při nabíjení z nuly proto kondenzátor dosáhne přibližně 63,2 % napětí zdroje. \[5, kap. 7.6; 4, s. 2–4\]
 
-![Obrázek z projektu](report-assets/media/image6.png)
+<figure>
+![Obrázek z projektu](report-assets/media/image4.png)
+<figcaption><p>Obrázek 2 Nabíjení a vybíjení v závislosti na t/τ. Vlastní výpočet podle vztahů v kapitole 2.</p></figcaption>
+</figure>
 
 | **Čas** | **Nabíjení u_C/U** | **Vybíjení u_C/U₀** |
 |:-------:|:------------------:|:-------------------:|
@@ -101,8 +123,6 @@ Napětí rezistoru je u<sub>R</sub> = Ri = −u<sub>C</sub>. Záporný proud ozn
 |   1τ    |      63,21 %       |       36,79 %       |
 |   2τ    |      86,47 %       |       13,53 %       |
 |   5τ    |      99,33 %       |       0,67 %        |
-
-Obrázek 2 Nabíjení a vybíjení v závislosti na t/τ. Vlastní výpočet podle vztahů v kapitole 2.
 
 Po 5τ není kondenzátor matematicky plně nabitý. Zbývající odchylka činí e⁻⁵ ≈ 0,674 %. O praktickém ustálení lze mluvit tehdy, když je tato odchylka menší než požadovaná přesnost. Zvětšení R nebo C celý průběh zpomalí. Stejné RC však nezaručuje stejný proud ani energii, protože proud závisí na R a energie na C.
 
@@ -112,7 +132,7 @@ Pro dosažení podílu α napětí zdroje platí t<sub>α</sub> = −τ ln(1 −
 
 Při obdélníkovém buzení je rozhodující délka každé půlperiody. Je-li mnohem delší než τ, napětí na C se v každém úseku téměř ustálí. Při rychlém střídání se kondenzátor mezi hranami nestihne výrazně nabít ani vybít. Výstup na C pak připomíná vyhlazený průběh. Přesná aproximace integrátoru vyžaduje ωRC ≫ 1 pro sledované složky signálu. \[4, s. 3–6\]
 
-Stejná konstanta určuje mezní kmitočet f<sub>c</sub> = 1/(2πτ). Součin t₁₀–₉₀f_c je přibližně 0,350. Pomalejší reakce na hranu a nižší šířka pásma jsou tedy vlastnosti téhož obvodu.
+Stejná konstanta určuje mezní kmitočet f<sub>c</sub> = 1/(2πτ). Součin t₁₀–₉₀f<sub>c</sub> je přibližně 0,350. Pomalejší reakce na hranu a nižší šířka pásma jsou tedy vlastnosti téhož obvodu.
 
 # RC filtry pro střídavé signály
 
@@ -122,17 +142,24 @@ Harmonické napětí má tvar u<sub>in</sub>(t) = Û sin(ωt), kde Û je amplitu
 
 Výstup na kondenzátoru dává dolní propust, výstup na rezistoru horní propust. Následující vztahy předpokládají ideální zdroj a výstup nezatížený dalším obvodem. Přenos H je komplexní poměr výstupního a vstupního napětí. \[4, s. 5–6; 7, s. 5\]
 
-$`H_{DP}(j\omega)\  = \ 1/(1\  + \ j\omega RC)\ \ \ \ \ ;\ \ \ \ \ H_{HP}(j\omega)\  = \ j\omega RC/(1\  + \ j\omega RC)`$
+```math
+H_{DP}(j\omega) = \frac{1}{1\  + \ j\omega RC}\ \ \ \ ;\ \ \ \ \ H_{HP}(j\omega) = \frac{j\omega RC}{1\  + \ j\omega RC}
+```
 
-$`|H_{DP}|\  = \ 1/\sqrt{}(1\  + \ (\omega RC)²)\ \ \ \ \ ;\ \ \ \ \ |H_{HP}|\  = \ \omega RC/\sqrt{}(1\  + \ (\omega RC)²)`$
+```math
+\left| H_{DP} \right| = \frac{1}{\sqrt{1\  + \ (\omega RC)^{2}}}\ \ \ \ ;\ \ \ \ \ \left| H_{HP} \right| = \frac{\omega RC}{\sqrt{1\  + \ (\omega RC)^{2}}}
+```
 
-$`\varphi\_ DP\  = \  - arctan(\omega RC)\ \ \ \ \ ;\ \ \ \ \ \varphi\_ HP\  = \ 90{^\circ}\  - \ arctan(\omega RC)`$
+```math
+\varphi_{DP} = \  - \arctan(\omega RC)\ \ \ \ ;\ \ \ \ \ \varphi_{HP} = \ 90{^\circ}\  - \arctan(\omega RC)
+```
 
 Při f<sub>c</sub> = 1/(2πRC) platí ωRC = 1. Obě propusti mají \|H\| = 1/√2 a zisk 20 log₁₀\|H\| ≈ −3,01 dB. Výstupní amplituda je přibližně 70,7 % vstupní, nikoli 50 %. Poloviční výkon odpovídá tomuto poměru napětí při porovnání na stejném odporu. Fáze je −45° u dolní a +45° u horní propusti.
 
-![Obrázek z projektu](report-assets/media/image7.png)
-
-Obrázek 3 Amplitudová a fázová charakteristika obou RC propustí. Vlastní výpočet, kmitočet je dělen mezním kmitočtem.
+<figure>
+![Obrázek z projektu](report-assets/media/image5.png)
+<figcaption><p>Obrázek 3 Amplitudová a fázová charakteristika obou RC propustí. Vlastní výpočet, kmitočet je dělen mezním kmitočtem.</p></figcaption>
+</figure>
 
 Hluboko nad f<sub>c</sub> klesá přenos dolní propusti o 20 dB na dekádu. Hluboko pod f<sub>c</sub> roste přenos horní propusti směrem k vyšším kmitočtům o 20 dB na dekádu. To odpovídá asi 6 dB na oktávu. Přechod není ostrý, takže jednoduchý RC článek odděluje kmitočtová pásma pozvolna.
 
@@ -144,9 +171,11 @@ Zadání projektu č. 8 požaduje vztahy pro u<sub>R</sub> a u<sub>C</sub> a nap
 
 ## Úkol 1 Obecné vztahy
 
-Řešením diferenciální rovnice RC du_C/dt + u<sub>C</sub> = U s podmínkou u<sub>C</sub>(0) = 0 dostáváme:
+Řešením diferenciální rovnice RC du<sub>C</sub>/dt + u<sub>C</sub> = U s podmínkou u<sub>C</sub>(0) = 0 dostáváme:
 
-$`u_{C}(t)\  = \ U(1\  - \ e\hat{}( - t/\tau))\ \ \ \ \ ;\ \ \ \ \ u_{R}(t)\  = \ Ue\hat{}( - t/\tau)\ \ \ \ \ ;\ \ \ \ \ \tau\  = \ RC`$
+```math
+u_{C}(t) = \ U\left( 1\  - \ e^{- \frac{t}{\tau}} \right)\ \ \ \ ;\ \ \ \ \ u_{R}(t) = \ Ue^{- \frac{t}{\tau}}\ \ \ \ ;\ \ \ \ \ \tau\  = \ RC
+```
 
 Kontrola druhým Kirchhoffovým zákonem dává u<sub>R</sub>(t) + u<sub>C</sub>(t) = U pro libovolné t ≥ 0. Na začátku je napětí na rezistoru rovno U, zatímco na kondenzátoru je nulové. Po dlouhé době je situace obrácená. Při vybíjení z napětí U platí u<sub>C</sub>(t) = Ue<sup>−t/τ</sup> a u<sub>R</sub>(t) = −Ue<sup>−t/τ</sup>, pokud se orientace měření nezmění. \[5, kap. 7.6\]
 
@@ -154,7 +183,9 @@ Kontrola druhým Kirchhoffovým zákonem dává u<sub>R</sub>(t) + u<sub>C</sub>
 
 V čase t = τ = RC se exponent zjednoduší na −1:
 
-$`u_{C}(\tau)\  = \ U(1\  - \ e⁻¹)\  \approx \ 0,632121\ U`$
+```math
+u_{C}(\tau) = \ U\left( 1\  - \ e^{- 1} \right) \approx \ 0,632121\ U
+```
 
 Při vybíjení ze stejného počátečního napětí je u<sub>C</sub>(τ) = Ue⁻¹ ≈ 0,367879U. Hodnoty 63,2 % a 36,8 % tedy popisují dva odlišné děje, které je třeba rozlišovat podle počáteční podmínky.
 
@@ -176,13 +207,19 @@ Pokud by počáteční napětí bylo 2,00 V, obecné řešení by dalo u<sub>C</
 
 Třetí úkol požaduje teplo na rezistoru od připojení zdroje do času τ, nikoli okamžitý výkon nebo ztrátu při úplném nabití. Pro nabíjení z nuly je i(t) = (U/R)e<sup>−t/τ</sup>. \[1; 5, kap. 7.6\]
 
-$`p_{R}(t)\  = \ Ri²(t)\  = \ (U²/R)e\hat{}( - 2t/\tau)`$
+```math
+p_{R}(t) = \ Ri^{2}(t) = \ \left( \frac{U^{2}}{R} \right)e^{- \frac{2t}{\tau}}
+```
 
-$`W_{R}(t)\  = \ \int\_ 0\hat{}t\ p_{R}(s)\ ds\  = \ (CU²/2)(1\  - \ e\hat{}( - 2t/\tau))`$
+```math
+W_{R}(t) = \ \int_{0}^{t}{p_{R}(s)ds} = \ \left( \frac{CU^{2}}{2} \right)\left( 1\  - \ e^{- \frac{2t}{\tau}} \right)
+```
 
 Integrál exponenciály přinese faktor τ/2 = RC/2. Dvojka v exponentu vzniká umocněním proudu. Po dosazení požadovaného času vychází:
 
-$`W_{R}(\tau)\  = \ (CU²/2)(1\  - \ e⁻²)\  \approx \ 0,432332\ CU²`$
+```math
+W_{R}(\tau) = \ \left( \frac{CU^{2}}{2} \right)\left( 1\  - \ e^{- 2} \right) \approx \ 0,432332\ CU^{2}
+```
 
 Jednotka F·V² je joule. Při pevném čase t výsledek závisí na odporu uvnitř exponentu. Při čase vyjádřeném jako jedna vlastní konstanta RC se odpor z konečného koeficientu vykrátí.
 
@@ -190,13 +227,16 @@ Jednotka F·V² je joule. Při pevném čase t výsledek závisí na odporu uvni
 
 Práci zdroje spočítáme integrací Ui(t), energii kondenzátoru z okamžitého napětí. \[3, kap. 5.4\]
 
-$`W_{z}(t)\  = \ CU²(1\  - \ e\hat{}( - t/\tau))\ \ \ \ \ ;\ \ \ \ \ W_{C}(t)\  = \ ½CU²(1\  - \ e\hat{}( - t/\tau))²`$
+```math
+W_{z}(t) = \ CU^{2}\left( 1\  - \ e^{- \frac{t}{\tau}} \right)\ \ \ \ ;\ \ \ \ \ W_{C}(t) = \ \frac{1}{2}CU^{2}\left( 1\  - \ e^{- \frac{t}{\tau}} \right)^{2}
+```
 
 Součet W<sub>C</sub> + W<sub>R</sub> je po algebraické úpravě roven W<sub>z</sub>. V čase τ vycházejí koeficienty 0,1997882 pro energii pole, 0,4323324 pro teplo a 0,6321206 pro zdroj. Shoda je přesná před zaokrouhlením.
 
-![Obrázek z projektu](report-assets/media/image8.png)
-
-Obrázek 4 Rozdělení energie během nabíjení. Svislá osa udává energii dělenou CU². Vlastní výpočet.
+<figure>
+![Obrázek z projektu](report-assets/media/image6.png)
+<figcaption><p>Obrázek 4 Rozdělení energie během nabíjení. Svislá osa udává energii dělenou CU². Vlastní výpočet.</p></figcaption>
+</figure>
 
 V číselném příkladu je CU² = 25,0 µJ. Teplo do τ činí 10,808 µJ, uložená energie 4,995 µJ a práce zdroje 15,803 µJ. Jejich bilance odpovídá odvozeným vztahům.
 
@@ -233,9 +273,13 @@ Vazební kondenzátor v sérii se signálem odděluje stejnosměrná pracovní n
 
 Označme odpor zdroje R<sub>s</sub> a vstupní odpor dalšího stupně R<sub>L</sub>. Impedanční dělič poskytne následující přenos:
 
-$`H(j\omega)\  = \ (j\omega C\ R\_ L)/(1\  + \ j\omega C(R\_ s\  + \ R\_ L))`$
+```math
+H(j\omega) = \frac{j\omega C\ R_{L}}{1\  + \ j\omega C\left( R_{s} + \ R_{L} \right)}
+```
 
-$`f_{c}\  = \ 1/\lbrack 2\pi C(R\_ s\  + \ R\_ L)\rbrack\ \ \ \ \ ;\ \ \ \ \ |H(\infty)|\  = \ R\_ L/(R\_ s\  + \ R\_ L)`$
+```math
+f_{c}\  = \frac{1}{\left\lbrack 2\pi C\left( R_{s} + \ R_{L} \right) \right\rbrack}\ \ \ ;\ \ \ \ \ \left| H(\infty) \right| = \frac{R_{L}}{R_{s} + \ R_{L}}
+```
 
 Při R<sub>s</sub> ≪ R<sub>L</sub> lze odpor zdroje zanedbat. Jinak snižuje přenos v propustném pásmu a mění časovou konstantu. Nižší kmitočet pólu v takovém případě sám o sobě neznamená větší výstupní napětí.
 
@@ -266,13 +310,18 @@ Jednoduchý detektor obsahuje usměrňovač a kondenzátor s vybíjecí cestou. 
 
 Pro výpočet použijeme idealizovaný řídicí impulz o výšce 1 V a délce 50 ms. Zvolíme C = 1 µF, nabíjecí cestu R<sub>A</sub> = 10 kΩ a vybíjecí cestu R<sub>R</sub> = 100 kΩ. Konstanty jsou τ<sub>A</sub> = 10 ms a τ<sub>R</sub> = 100 ms. Úbytek na diodě zanedbáme a předpokládáme ideální přepínání cest.
 
-$`u_{env}(t)\  = \ 1\ V\  \cdot \ (1\  - \ e\hat{}( - t/\tau_{A}))\ \ \ \ \ \ \ \ \ \ \ \ \ \ 0\  \leq \ t\  < \ 50\ ms`$
+```math
+u_{env}(t) = \ 1\ V\  \cdot \ \left( 1\  - \ e^{- \frac{t}{\tau_{A}}} \right)\ \ \ \ \ \ \ \ \ \ \ \ \ 0\  \leq \ t\  < \ 50\ ms
+```
 
-$`u_{env}(t)\  = \ u_{env}(50\ ms)e\hat{}( - (t\  - \ 50\ ms)/\tau_{R})\ \ \ \ \ t\  \geq \ 50\ ms`$
+```math
+u_{env}(t) = \ u_{env}(50\ ms)e^{- \frac{t\  - \ 50\ ms}{\tau_{R}}}\ \ \ \ t\  \geq \ 50\ ms
+```
 
-![Obrázek z projektu](report-assets/media/image9.png)
-
-Obrázek 5 Modelová obálka s rychlejším nabíjením a pomalejším vybíjením. Vlastní výpočet, nikoli záznam bubnu.
+<figure>
+![Obrázek z projektu](report-assets/media/image7.png)
+<figcaption><p>Obrázek 5 Modelová obálka s rychlejším nabíjením a pomalejším vybíjením. Vlastní výpočet, nikoli záznam bubnu.</p></figcaption>
+</figure>
 
 Po 10 ms je napětí 0,632 V, na konci impulzu 0,993 V. Za dalších 100 ms klesne na 0,366 V. Pokles na desetinu hodnoty na konci impulzu trvá přibližně 230 ms.
 
@@ -286,9 +335,10 @@ Rychlé sledování může zvlnit řídicí napětí, pomalé spojovat sousední
 
 Vztah E(t) ≈ u<sub>C</sub>(t)/d spojuje obvodové napětí s dějem mezi elektrodami. Při stejné geometrii sleduje intenzita pole časový průběh napětí. Při nabíjení se přibližuje konečné hodnotě, při vybíjení klesá. Následující vizualizace používá homogenní deskový model bez okrajových jevů. \[3, kap. 5.2 a 5.4\]
 
-![Obrázek z projektu](report-assets/media/image10.png)
-
-Obrázek 6 Relativní intenzita elektrického pole při nabíjení. Směr šipek míří od kladné elektrody k záporné. Vlastní schéma.
+<figure>
+![Obrázek z projektu](report-assets/media/image8.png)
+<figcaption><p>Obrázek 6 Relativní intenzita elektrického pole při nabíjení. Směr šipek míří od kladné elektrody k záporné. Vlastní schéma.</p></figcaption>
+</figure>
 
 ## Napětí a energie nerostou ve stejném poměru
 
@@ -310,9 +360,10 @@ Na nízkonapěťový obvod lze přivést skok a osciloskopem odečíst τ při d
 
 K této práci jsem vytvořil simulaci RC Audio Lab, abych lépe porozuměl odvozeným výpočtům. Propojuje je s hudební elektronikou, kterou znám při hře na kytaru, baskytaru a bicí. K poslechu přidává grafy napětí, proudu a přenosu a ukazuje účinek změny součástek. \[2\]
 
-![Obrázek z projektu](report-assets/media/image11.png)
-
-Obrázek 7 Ovládání vlastní simulace RC Audio Lab. Odpor lze měnit posuvníkem i otočným ovladačem u rezistoru. Snímek vlastní aplikace. \[2\]
+<figure>
+![Obrázek z projektu](report-assets/media/image9.png)
+<figcaption><p>Obrázek 7 Ovládání vlastní simulace RC Audio Lab. Odpor lze měnit posuvníkem i otočným ovladačem u rezistoru. Snímek vlastní aplikace. [2]</p></figcaption>
+</figure>
 
 ## Změna parametrů a zvuk
 
@@ -324,15 +375,19 @@ Zvuková ukázka používá nahrávku elektrické kytary z knihovny FreePats pod
 
 Zvuk zpracovává filtr prvního řádu v AudioWorkletu. Jeho koeficient vzniká bilineární transformací s přizpůsobením mezního kmitočtu. Pro ustálené parametry platí: \[14; 2\]
 
-$`y\lbrack n\rbrack\  = \ b₀(x\lbrack n\rbrack\  - \ x\lbrack n - 1\rbrack)\  + \ (2b₀\  - \ 1)y\lbrack n - 1\rbrack`$
+```math
+y\lbrack n\rbrack = \ b_{0}\left( x\lbrack n\rbrack - \ x\lbrack n - 1\rbrack \right) + \ \left( 2b_{0} - \ 1 \right)y\lbrack n - 1\rbrack
+```
 
-$`b₀\  = \ 1/(1\  + \ tan(\pi\ f_{c}/f_{s}))`$
+```math
+b_{0} = \frac{1}{1\  + \tan\left( \pi\frac{f_{c}}{f_{s}} \right)}
+```
 
 Vzorkovací kmitočet f<sub>s</sub> je 48 kHz. Analogový a digitální model se shodují v mezním bodě; jejich rozdíl jinde ukazuje samostatná křivka. Kontrola prvních tří sekund zdrojové nahrávky naměřila při změně C ze 100 nF na 2,2 nF a R = 100 kΩ pokles středního kvadrátu signálu o 10,19 dB. Výsledek platí pro tuto nahrávku a nastavení, nikoli všechny tóny.
 
 Simulace je dostupná na https://majkey25.github.io/rc-audio-lab/. Zdrojový kód a dokumentace jsou na https://github.com/Majkey25/rc-audio-lab. \[2\]
 
-Závěr
+# Závěr
 
 Pro nabíjení původně vybitého kondenzátoru platí u<sub>C</sub>(t) = U(1 − e<sup>−t/RC</sup>) a u<sub>R</sub>(t) = Ue<sup>−t/RC</sup>. Jejich součet je v každém okamžiku roven U. Po jedné časové konstantě τ = RC dosahuje napětí kondenzátoru 0,632121U. Při vybíjení ze stejného napětí zbývá na kondenzátoru 0,367879U a proud má opačný směr vůči nabíjecí referenci.
 
@@ -342,7 +397,7 @@ Vazební kondenzátor ukazuje praktický význam mezního kmitočtu. Při odporu
 
 Vlastní simulace umožňuje sledovat tyto vztahy při změně parametrů a porovnat je s filtrovaným zvukem. Jejím účelem je názorné vysvětlení části výpočtů této práce. Úplný model pasivního snímače by musel zahrnout indukčnost a zatížení, model kompresoru také detektor a řízené zesílení. Tyto obvody proto nejsou zaměňovány s jednoduchým RC článkem. \[2\]
 
-Použití nástrojů umělé inteligence
+# Použití nástrojů umělé inteligence
 
 Při přípravě tohoto projektu jsem využil nástroje generativní umělé inteligence jako moderní pracovní pomůcky pro psaní, výpočty a vývoj softwaru. Šlo o Antigravity, Codex a Claude Code. Pomáhaly při hledání zdrojů, návrhu a úpravě textu, vysvětlování vztahů, tvorbě grafů, programování simulace, kontrole kódu a sazbě dokumentu. Jejich podíl se tedy neomezil pouze na kontrolu pravopisu. \[15; 16; 17\]
 
@@ -352,7 +407,7 @@ Za konečné znění projektu, jeho výpočty a interpretaci odpovídám jako au
 
 Shrnutí zadaných úloh pro AI: vysvětlit RC děj a odvodit tři výsledky podle zadání; propojit téma s hudební elektronikou; vytvořit grafy a vysadit text do šablony UTB; naprogramovat česko-anglickou simulaci se zvukovým filtrem; zkontrolovat rovnice, kód, citace a čitelnost. Následné revize požadovaly odstranit nepodložená tvrzení, odlišit výpočet od měření a opravit nalezené chyby.
 
-Seznam použité literatury
+# Seznam použité literatury
 
 \[1\] AK3EJ. Podrobný popis projektů: projekt č. 8 Nabíjení a vybíjení kondenzátoru, děj RC. Studijní zadání dodané ve formátu CSV a v souboru Projekt8.docx. Bez data. Shrnutí zadání v dokumentaci projektu. Dostupné z: <https://github.com/Majkey25/rc-audio-lab/blob/main/docs/assignment.md>
 

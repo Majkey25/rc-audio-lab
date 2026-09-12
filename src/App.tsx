@@ -16,7 +16,6 @@ import './App.css'
 const samples = (count: number, start: number, end: number) => Array.from({ length: count }, (_, i) => start + (end - start) * i / (count - 1))
 const presetCs = ['Plné basové pásmo', 'Mírné potlačení basů', 'Silnější potlačení basů', 'Výrazná ukázka']
 
-}
 
 function App() {
   const [language, setLanguage] = useState<Language>(() => { try { return localStorage.getItem('rc-language') === 'en' ? 'en' : 'cs' } catch { return 'cs' } })

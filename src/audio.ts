@@ -4,6 +4,7 @@ import type { Circuit } from './physics'
 export type Sound = 'guitar' | 'bass' | 'sine'
 export interface AudioSettings extends Circuit { sound: Sound; frequency: number; bypass: boolean; volume: number }
 
+// Without a usable output device Firefox never settles resume(), which would leave the UI stuck on "loading".
 function resumeAudio(context: AudioContext): Promise<void> {
   return new Promise((resolve, reject) => {
     const timeout = setTimeout(() => reject(new Error('The audio output device did not start within 15 seconds.')), 15000)
@@ -12,6 +13,7 @@ function resumeAudio(context: AudioContext): Promise<void> {
       error => { clearTimeout(timeout); reject(error) },
     )
   })
+}
 
 async function makeRiff(context: AudioContext, sample: AudioBuffer, octave: number): Promise<AudioBuffer> {
   const rate = context.sampleRate, step = 0.42
@@ -78,7 +80,10 @@ export class AudioEngine {
       const processor = new AudioWorkletNode(context, 'rc-highpass', { outputChannelCount: [1] })
       const [guitar, bass] = await Promise.all([makeRiff(context, sample, 0), makeRiff(context, sample, -12)])
       return new AudioEngine(context, processor, guitar, bass, settings)
-    } catch (cause) { void context.close().catch(() => {}); throw cause }
+    } catch (cause) {
+      void context.close().catch(error => console.warn('Audio context cleanup failed.', error))
+      throw cause
+    }
   }
 
   get sampleRate(): number { return this.context.sampleRate }

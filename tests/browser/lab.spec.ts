@@ -92,3 +92,16 @@ test('mobile, reduced motion, real photographs and no horizontal overflow', asyn
     await expect.poll(()=>img.evaluate((node:HTMLImageElement)=>node.naturalWidth)).toBeGreaterThan(100)
   }
 })
+
+test('failed sample download releases startup and can be retried', async ({ page }) => {
+  await page.route('**/audio/guitar-f2.flac', route => route.fulfill({ status: 404, body: 'missing' }))
+  await page.goto('./')
+  await page.getByRole('button', { name: 'Switch to English' }).click()
+  await page.getByRole('button', { name: '▶ Start audio' }).click()
+  await expect(page.getByRole('alert')).toContainText('HTTP 404')
+  await expect(page.getByRole('button', { name: '▶ Start audio' })).toBeEnabled()
+  await page.unroute('**/audio/guitar-f2.flac')
+  await page.getByRole('button', { name: '▶ Start audio' }).click()
+  await expect(page.getByRole('button', { name: 'Stop audio' })).toBeVisible()
+  await page.getByRole('button', { name: 'Stop audio' }).click()
+})
