@@ -8,14 +8,14 @@
 
 An interactive simulation of capacitor charging, discharging and a first-order audio filter. Created by Matěj Teplý for an **AK3EJ credit project** at Tomas Bata University in Zlín. The interface defaults to Czech and includes an English switch.
 
-One resistor and one capacitor give two different circuits, and the output tap decides which. Across the capacitor they form a low-pass, the arrangement behind a guitar tone control. Across the resistor they form a high-pass, the coupling stage that blocks steady DC between amplifier stages. The schematic swaps the two parts to match the tap, and the equations, plots and audio all follow it.
+The output tap determines the filter response. Across the capacitor, the RC circuit forms a low-pass that reduces treble. Across the resistor, it forms a high-pass that models a coupling stage between amplifiers. The schematic swaps the two parts to match the tap, and the equations, plots and audio follow it.
 
-Two analysers, one before the filter and one after it, estimate the response of the running audio and draw it over the analytic curve. With white noise as the source the measured estimate tracks the RC formula across the audio band and bends away near 20 kHz, where the bilinear transform warps the frequency axis. A complete passive guitar pickup also has inductance; this app does not model that entire circuit.
+Two analysers, one before the filter and one after it, estimate the response of the running audio and draw it beside the calculated curves. White noise excites the full band; a guitar note gives a less reliable estimate where its input spectrum is weak. The low-pass plot shows the digital and analog responses diverging near the Nyquist frequency because the bilinear transform warps the frequency axis. This is a digital signal check, not a hardware measurement. A complete passive guitar pickup also has inductance; this app does not model that entire circuit.
 
 ## Using the simulation
 
 - Switch the output tap between the capacitor and the resistor. Change R with the slider or the rotary control beside the resistor, change C, and inspect the cutoff and substituted equations.
-- Start the recorded guitar riff, then switch **A · Bypass** / **B · Filtered** while adjusting R or C. The low-pass is the audible one: at 10 kΩ and 47 nF it removes 16.4 dB of the recording's energy above 2 kHz. The second riff is the same recording transposed down an octave, a sine follows the frequency slider, and white noise drives the measurement.
+- Start the recorded guitar riff, then switch **A · Bypass** / **B · Filtered** while adjusting R or C. The default low-pass at 10 kΩ and 47 nF reduces the recording's treble. The second riff is the same recording transposed down an octave, a sine follows the frequency slider, and white noise drives the spectrum estimate.
 - Select **Charging & energy** to inspect capacitor voltage, resistor voltage, current and energy. Pause, scrub time or jump directly to τ. Discharging retains the same voltage/current references, so resistor voltage and current are negative.
 - Open the component details for photographs and their credits. Keyboard arrows operate both sliders and the rotary control.
 
@@ -38,7 +38,7 @@ npx playwright install chromium firefox
 npm run test:e2e
 ```
 
-`check` runs TypeScript, Oxlint, Node's built-in physics tests and the production build. Browser tests exercise both languages, the controls, charging/discharging, audio A/B, mobile layout and reduced motion. They also render the production audio processor in `OfflineAudioContext` and compare its measured amplitude/phase with the mathematical response. The recorded-sample test compares filtering of the same first three seconds, without using a microphone or claiming a hardware measurement.
+`check` runs TypeScript, Oxlint, Node's built-in physics tests and the production build. Browser tests exercise both languages, the controls, charging/discharging, audio A/B, mobile layout and reduced motion. They also render the production audio processor in `OfflineAudioContext` and compare its measured amplitude/phase with the mathematical response. The recorded-sample test processes the first three seconds of the original F2 recording, rather than the arranged riff, at unchanged gain. Four measurement high-pass stages at 2 kHz weight the result toward treble without imposing a sharp band boundary. The weighted mean-square level fell by about 16.4 dB with the default low-pass in the verified run; the test requires a reduction greater than 12 dB. This metric describes that recording and measurement method.
 
 ## Implementation
 

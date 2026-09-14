@@ -73,10 +73,11 @@ Skutečná součástka má navíc ztráty, svod a parazitní indukčnost. Ve vý
 
 Sériově spojíme ideální zdroj stálého napětí U, rezistor R \> 0 a vybitý kondenzátor C \> 0. V čase t = 0 obvod sepneme. Proud i bereme jako kladný ve směru nabíjení kladné elektrody. Napětí u<sub>R</sub> je úbytek v tomto směru, u<sub>C</sub> měříme od kladné elektrody k záporné. \[5, kap. 7.6\]
 
-<figure>
 ![Obrázek z projektu](report-assets/media/image3.png)
-<figcaption><p>Obrázek 1 Sériový RC obvod a orientace veličin. Zdroj lze nastavit na U pro nabíjení nebo na 0 V pro vybíjení. Vlastní schéma.</p></figcaption>
-</figure>
+
+Obrázek 1 Sériový RC obvod a orientace veličin. Zdroj lze nastavit na U pro nabíjení nebo na 0 V pro vybíjení. Vlastní schéma.
+
+
 
 ## Diferenciální rovnice
 
@@ -112,10 +113,11 @@ Napětí rezistoru je u<sub>R</sub> = Ri = −u<sub>C</sub>. Znaménko mínus je
 
 Časová konstanta τ = RC má jednotku sekunda, protože Ω·F = (V/A)·(A·s/V) = s. Po jedné časové konstantě zbývá e⁻¹ ≈ 36,8 % původního rozdílu mezi okamžitým a konečným napětím. Kondenzátor nabíjený z nuly proto dosáhne přibližně 63,2 % napětí zdroje. \[5, kap. 7.6; 4, s. 2–4\]
 
-<figure>
 ![Obrázek z projektu](report-assets/media/image4.png)
-<figcaption><p>Obrázek 2 Nabíjení a vybíjení v závislosti na t/τ. Vlastní výpočet podle vztahů v kapitole 2.</p></figcaption>
-</figure>
+
+Obrázek 2 Nabíjení a vybíjení v závislosti na t/τ. Vlastní výpočet podle vztahů v kapitole 2.
+
+
 
 | **Čas** | **Nabíjení u_C/U** | **Vybíjení u_C/U₀** |
 |:-------:|:------------------:|:-------------------:|
@@ -156,10 +158,11 @@ H_{DP}(j\omega) = \frac{1}{1\  + \ j\omega RC}\ \ \ \ ;\ \ \ \ \ H_{HP}(j\omega)
 
 Při f<sub>c</sub> = 1/(2πRC) platí ωRC = 1. Obě propusti mají \|H\| = 1/√2 a zisk 20 log₁₀\|H\| ≈ −3,01 dB. Výstupní amplituda je tedy přibližně 70,7 % vstupní, nikoli 50 %. Na stejném odporu tomuto poměru napětí odpovídá poloviční výkon. Fáze je −45° u dolní a +45° u horní propusti.
 
-<figure>
 ![Obrázek z projektu](report-assets/media/image5.png)
-<figcaption><p>Obrázek 3 Amplitudová a fázová charakteristika obou RC propustí. Vlastní výpočet, kmitočet je dělen mezním kmitočtem.</p></figcaption>
-</figure>
+
+Obrázek 3 Amplitudová a fázová charakteristika obou RC propustí. Vlastní výpočet, kmitočet je dělen mezním kmitočtem.
+
+
 
 Hluboko nad f<sub>c</sub> klesá přenos dolní propusti o 20 dB na dekádu. Hluboko pod f<sub>c</sub> roste přenos horní propusti směrem k vyšším kmitočtům o týchž 20 dB na dekádu. To je asi 6 dB na oktávu. Přechod není ostrý, takže jednoduchý RC článek dělí pásma pozvolna.
 
@@ -205,7 +208,7 @@ Kdyby na kondenzátoru zbylo počáteční napětí 2,00 V, dalo by obecné ře�
 
 # Úkol 3: energie přeměněná na teplo
 
-Třetí úkol chce teplo na rezistoru od sepnutí do času τ. Ne okamžitý výkon a ne ztrátu při úplném nabití. Pro nabíjení z nuly je i(t) = (U/R)e<sup>−t/τ</sup>. \[1; 5, kap. 7.6\]
+Třetí úkol požaduje energii přeměněnou na teplo od sepnutí do času τ. Spočítáme ji integrací výkonu na rezistoru přes tento časový interval. Pro nabíjení z nuly použijeme proud odvozený v kapitole 2. \[1; 5, kap. 7.6\]
 
 ```math
 p_{R}(t) = \ Ri^{2}(t) = \ \left( \frac{U^{2}}{R} \right)e^{- \frac{2t}{\tau}}
@@ -221,7 +224,7 @@ Dvojka v exponentu vzniká umocněním proudu. Integrace exponenciály pak přin
 W_{R}(\tau) = \ \left( \frac{CU^{2}}{2} \right)\left( 1\  - \ e^{- 2} \right) \approx \ 0,432332\ CU^{2}
 ```
 
-Součin F·V² dává joule. Při pevně zadaném čase t na odporu záleží, protože R sedí v exponentu. Měříme-li čas v násobcích RC, odpor se z koeficientu vykrátí.
+Součin F·V² dává joule. Při pevně zadaném čase t na odporu záleží, protože R je součástí exponentu. Měříme-li čas v násobcích RC, odpor se z koeficientu vykrátí.
 
 ## Energetická bilance
 
@@ -233,10 +236,11 @@ W_{z}(t) = \ CU^{2}\left( 1\  - \ e^{- \frac{t}{\tau}} \right)\ \ \ \ ;\ \ \ \ \
 
 Po úpravě je součet W<sub>C</sub> + W<sub>R</sub> přesně roven W<sub>z</sub>. V čase τ vychází koeficient 0,1997882 pro energii pole, 0,4323324 pro teplo a 0,6321206 pro zdroj. Bilance sedí ještě před zaokrouhlením.
 
-<figure>
 ![Obrázek z projektu](report-assets/media/image6.png)
-<figcaption><p>Obrázek 4 Rozdělení energie během nabíjení. Svislá osa udává energii dělenou CU². Vlastní výpočet.</p></figcaption>
-</figure>
+
+Obrázek 4 Rozdělení energie během nabíjení. Svislá osa udává energii dělenou CU². Vlastní výpočet.
+
+
 
 V číselném příkladu je CU² = 25,0 µJ. Teplo do τ činí 10,808 µJ, uložená energie 4,995 µJ a práce zdroje 15,803 µJ.
 
@@ -318,10 +322,11 @@ u_{env}(t) = \ 1\ V\  \cdot \ \left( 1\  - \ e^{- \frac{t}{\tau_{A}}} \right)\ \
 u_{env}(t) = \ u_{env}(50\ ms)e^{- \frac{t\  - \ 50\ ms}{\tau_{R}}}\ \ \ \ t\  \geq \ 50\ ms
 ```
 
-<figure>
 ![Obrázek z projektu](report-assets/media/image7.png)
-<figcaption><p>Obrázek 5 Modelová obálka s rychlejším nabíjením a pomalejším vybíjením. Vlastní výpočet, nikoli záznam bubnu.</p></figcaption>
-</figure>
+
+Obrázek 5 Modelová obálka s rychlejším nabíjením a pomalejším vybíjením. Vlastní výpočet, nikoli záznam bubnu.
+
+
 
 Po 10 ms je napětí 0,632 V, na konci impulzu 0,993 V. Za dalších 100 ms klesne na 0,366 V. Pokles na desetinu hodnoty z konce impulzu trvá přibližně 230 ms.
 
@@ -335,10 +340,11 @@ Příliš rychlé sledování může zvlnit řídicí napětí. Pomalý pokles j
 
 Vztah E(t) ≈ u<sub>C</sub>(t)/d převádí obvodové napětí na děj mezi elektrodami. Při neměnné geometrii kopíruje intenzita pole průběh napětí. Při nabíjení se blíží konečné hodnotě, při vybíjení klesá. Obrázek níže používá homogenní deskový model bez okrajových jevů. \[3, kap. 5.2 a 5.4\]
 
-<figure>
 ![Obrázek z projektu](report-assets/media/image8.png)
-<figcaption><p>Obrázek 6 Relativní intenzita elektrického pole při nabíjení. Směr šipek míří od kladné elektrody k záporné. Vlastní schéma.</p></figcaption>
-</figure>
+
+Obrázek 6 Relativní intenzita elektrického pole při nabíjení. Směr šipek míří od kladné elektrody k záporné. Vlastní schéma.
+
+
 
 ## Napětí a energie nerostou ve stejném poměru
 
@@ -358,22 +364,23 @@ Na nízkonapěťovém obvodu by stačilo přivést skok a osciloskopem odečíst
 
 # Interaktivní simulace k zápočtovému projektu
 
-K této práci jsem si naprogramoval simulaci RC Audio Lab, abych odvozeným výpočtům lépe rozuměl. Propojuje je s hudební elektronikou, kterou znám z hraní na kytaru, baskytaru a bicí. Kromě grafů napětí, proudu a přenosu umí obvod také přehrát. \[2\]
+K této práci jsem si naprogramoval simulaci RC Audio Lab, abych odvozeným výpočtům lépe rozuměl. Propojuje je s hudební elektronikou, kterou znám z hraní na kytaru, baskytaru a bicí. Vedle grafů napětí, proudu a přenosu nabízí přehrávání zvuku zpracovaného filtrem. \[2\]
 
-<figure>
 ![Obrázek z projektu](report-assets/media/image9.png)
-<figcaption><p>Obrázek 7 Ovládání vlastní simulace RC Audio Lab v režimu dolní propusti. Odpor lze měnit posuvníkem i otočným ovladačem u rezistoru. Snímek vlastní aplikace. [2]</p></figcaption>
-</figure>
+
+Obrázek 7 Ovládání vlastní simulace RC Audio Lab v režimu dolní propusti. Odpor lze měnit posuvníkem i otočným ovladačem u rezistoru. Snímek vlastní aplikace. [2]
+
+
 
 ## Dvě odbočky téhož obvodu
 
-Odbočku výstupu lze přepnout. Na rezistoru vzniká horní propust, tedy vazební člen mezi zesilovacími stupni. Na kondenzátoru dolní propust, což je zapojení tónové clony. Schéma přitom obě součástky prohodí, protože u dolní propusti leží v sérii rezistor. R i C zůstávají stejné, takže je vidět, že jde pořád o týž článek.
+Odbočku výstupu lze přepnout. Na rezistoru vzniká horní propust, která modeluje vazební člen mezi zesilovacími stupni. Na kondenzátoru vzniká dolní propust pro omezení výšek za zdrojem s malým výstupním odporem. Pasivní kytarovou clonu se snímačem tento model plně nepopisuje, jak vysvětluje kapitola 7. Schéma při přepnutí prohodí polohu součástek, jejich hodnoty ale zůstanou stejné.
 
-Slyšet je rozdíl především na dolní propusti. Při R = 10 kΩ a C = 47 nF leží mezní kmitočet na 339 Hz a z kytarové nahrávky ubude 16,4 dB energie nad 2 kHz. Tuto hodnotu měří automatický test přímo na vykresleném zvuku. Horní propust na 159 Hz proti tomu odebere jen basy, které reproduktory notebooku stejně nepřenesou.
+Výchozí dolní propust má R = 10 kΩ, C = 47 nF a mezní kmitočet přibližně 339 Hz. Potlačuje proto značnou část vyšších harmonických. Automatický test používá první tři sekundy původní nahrávky tónu F₂, ze které aplikace skládá riff. Původní i filtrovaný signál při stejném zesílení dále procházejí čtyřmi měřicími horními propustmi na 2 kHz. Ty zvýrazní výšky, pásmo ale neoddělují ostře. Střední kvadratická hodnota takto upraveného signálu klesla při kontrole přibližně o 16,4 dB. Výsledek se vztahuje k této nahrávce a tomuto postupu.
 
 Zvuková ukázka stojí na nahrávce elektrické kytary z knihovny FreePats pod licencí CC0. Z jednoho tónu skládám krátký riff přeladěním jednotlivých not. Přepínač A/B drží stejné vstupní zesílení a R i C jdou měnit za chodu. \[13\]
 
-## Změřený přenos proti vypočtenému
+## Odhad přenosu z běžícího zvuku
 
 Zvuk zpracovává filtr prvního řádu v AudioWorkletu. Jeho koeficienty vzniknou bilineární transformací s přizpůsobením mezního kmitočtu. Pro dolní propust a ustálené parametry platí: \[14; 2\]
 
@@ -387,16 +394,17 @@ b_{0} = \ b_{1} = \frac{k}{1\  + \ k}\ \ \ \ ;\ \ \ \ \ a_{1} = \frac{k\  - \ 1}
 
 U odbočky na rezistoru se mění jen čitatel, kde je b₀ = 1/(1 + k) a b₁ = −b₀. Vzorkovací kmitočet f<sub>s</sub> je 48 kHz.
 
-Do cesty signálu jsem zapojil dva spektrální analyzátory, jeden před filtr a druhý za něj. Rozdíl jejich spekter dává změřený přenos běžícího zvuku. S bílým šumem na vstupu je odhad natolik klidný, že jde porovnat s vypočtenou křivkou.
+Dva spektrální analyzátory sledují signál před filtrem a za ním. Rozdíl jejich úrovní v decibelech odhaduje amplitudový přenos. Pro tuto ukázku je vhodný bílý šum, protože budí celé sledované pásmo. U kytarového tónu se odhad zhoršuje tam, kde vstup obsahuje málo energie. Výsledek ovlivňuje také délka analyzovaného úseku a vyhlazování spekter.
 
-<figure>
 ![Obrázek z projektu](report-assets/media/image10.png)
-<figcaption><p>Obrázek 8 Přenos změřený na běžícím zvuku položený na vypočtenou křivku ideálního RC článku. Snímek vlastní aplikace. [2]</p></figcaption>
-</figure>
 
-Obě křivky se přes celé slyšitelné pásmo překrývají. Nad 10 kHz se změřený průběh od analogového vzorce odchyluje a sleduje křivku číslicového filtru, protože se blíží polovina vzorkovacího kmitočtu. Přesně tam bilineární transformace kmitočtovou osu stlačuje.
+Obrázek 8 Odhad přenosu ze vstupního a výstupního spektra vedle vypočtené charakteristiky. Snímek vlastní aplikace. [2]
 
-Při stavbě simulace mě zaujalo, jak málo si graf a sluch odpovídají. Útlum 3 dB na mezním kmitočtu vypadá v šedesátidecibelovém měřítku jako téměř nic, v poslechu jde o znatelnou změnu váhy tónu. Simulace je dostupná na https://majkey25.github.io/rc-audio-lab/, zdrojový kód a dokumentace na https://github.com/Majkey25/rc-audio-lab. \[2\]
+
+
+V nižších kmitočtech se číslicový a analogový model téměř shodují. U zobrazené dolní propusti se blízko poloviny vzorkovacího kmitočtu rozcházejí kvůli nelineárnímu převodu kmitočtové osy při bilineární transformaci. Přizpůsobení zaručuje shodu na mezním kmitočtu, nikoli v celém pásmu. Přepnutí na nefiltrovaný zvuk má odhad přenosu vrátit k 0 dB. Takto lze ověřit, že ovladač mění zpracování signálu. Nejde o měření fyzického obvodu.
+
+Simulace je dostupná na <https://majkey25.github.io/rc-audio-lab/>, zdrojový kód a dokumentace na <https://github.com/Majkey25/rc-audio-lab>. \[2\]
 
 # Závěr
 

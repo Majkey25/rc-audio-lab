@@ -14,7 +14,7 @@ import type { Language, Translator } from './ui'
 import './App.css'
 
 const samples = (count: number, start: number, end: number) => Array.from({ length: count }, (_, i) => start + (end - start) * i / (count - 1))
-const presetCs = ['Tónová clona, jasná', 'Tónová clona, tmavá', 'Tónová clona, zavřená', 'Vazba, plné basy', 'Vazba, ořezané basy', 'Vazba, výrazná ukázka']
+const presetCs = ['Dolní propust, 1,59 kHz', 'Dolní propust, 339 Hz', 'Dolní propust, 72 Hz', 'Vazba, plné basy', 'Vazba, ořezané basy', 'Vazba, výrazná ukázka']
 
 
 function App() {
@@ -100,7 +100,7 @@ function App() {
     <main>
       <div className="intro">
         <h1>{t('Simulace RC obvodu', 'RC circuit simulation')}</h1>
-        <p>{t('Jeden rezistor a jeden kondenzátor. Podle toho, kde odebíráme výstup, z nich je tónová clona nebo vazební člen.', 'One resistor and one capacitor. Where you take the output decides whether they form a tone control or a coupling stage.')}</p>
+        <p>{t('Nabíjení a vybíjení kondenzátoru, horní a dolní propust a filtrace zvuku.', 'Capacitor charging and discharging, high-pass and low-pass response, and audio filtering.')}</p>
       </div>
       <div className="mode-tabs" role="group" aria-label={t('Režim simulace', 'Simulation mode')}>
         <button aria-pressed={mode === 'audio'} onClick={() => { setMode('audio'); setPlaying(false) }}>{t('Zvuk a frekvence', 'Audio & frequency')}</button>
@@ -145,7 +145,7 @@ function App() {
         <section className="instruments" aria-label={t('Schéma a grafy', 'Circuit and plots')}>
           <div className="instrument schematic">
             <div className="instrument-heading">
-              <h2>{tap === 'capacitor' ? t('Tónová clona', 'Tone control') : t('Vazební člen', 'Coupling stage')}</h2>
+              <h2>{tap === 'capacitor' ? t('Dolní propust', 'Low-pass filter') : t('Vazební člen', 'Coupling stage')}</h2>
               <span>{tap === 'capacitor' ? t('Dolní propust · výstup na C', 'Low-pass · output across C') : t('Horní propust · výstup na R', 'High-pass · output across R')}</span>
             </div>
             <Circuit t={t} tap={tap} r={resistance} c={capacitance} audio={mode === 'audio'} charge={voltage ? state.uc / voltage : 0} current={state.current} voltage={voltage} discharging={direction === 'discharging'} onResistanceChange={r => changeCircuit(r, capacitance)}/>

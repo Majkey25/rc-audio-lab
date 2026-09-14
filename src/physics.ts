@@ -93,9 +93,9 @@ export function engineering(value: number, unit: string): string {
 }
 
 export const PRESETS = [
-  { name: 'Tone control, bright', resistance: 10_000, capacitance: 10e-9, tap: 'capacitor' },
-  { name: 'Tone control, dark', resistance: 10_000, capacitance: 47e-9, tap: 'capacitor' },
-  { name: 'Tone control, closed', resistance: 100_000, capacitance: 22e-9, tap: 'capacitor' },
+  { name: 'Low-pass, 1.59 kHz', resistance: 10_000, capacitance: 10e-9, tap: 'capacitor' },
+  { name: 'Low-pass, 339 Hz', resistance: 10_000, capacitance: 47e-9, tap: 'capacitor' },
+  { name: 'Low-pass, 72 Hz', resistance: 100_000, capacitance: 22e-9, tap: 'capacitor' },
   { name: 'Coupling, full range', resistance: 100_000, capacitance: 100e-9, tap: 'resistor' },
   { name: 'Coupling, bass cut', resistance: 100_000, capacitance: 10e-9, tap: 'resistor' },
   { name: 'Coupling, extreme', resistance: 100_000, capacitance: 2.2e-9, tap: 'resistor' },
