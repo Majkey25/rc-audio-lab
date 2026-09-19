@@ -21,9 +21,9 @@ function App() {
   const [language, setLanguage] = useState<Language>(() => { try { return localStorage.getItem('rc-language') === 'en' ? 'en' : 'cs' } catch { return 'cs' } })
   const t: Translator = (cs, en) => language === 'cs' ? cs : en
   const [mode, setMode] = useState<'audio' | 'time'>('audio')
-  const [resistance, setR] = useState<number>(10000), [capacitance, setC] = useState<number>(47e-9)
-  const [tap, setTap] = useState<Tap>('capacitor')
-  const [frequency, setFrequency] = useState(1000), [voltage, setVoltage] = useState(5)
+  const [resistance, setR] = useState<number>(10000), [capacitance, setC] = useState<number>(1.38e-9)
+  const [tap, setTap] = useState<Tap>('resistor')
+  const [frequency, setFrequency] = useState(306), [voltage, setVoltage] = useState(5)
   const [direction, setDirection] = useState<Direction>('charging'), [position, setPosition] = useState(1), [playing, setPlaying] = useState(false), [normalized, setNormalized] = useState(false)
   const positionRef = useRef(1), engine = useRef<AudioEngine | null>(null)
   const [audioOn, setAudioOn] = useState(false), [busy, setBusy] = useState(false), [sound, setSound] = useState<Sound>('guitar'), [bypass, setBypass] = useState(false), [volume, setVolume] = useState(.3)

@@ -55,6 +55,36 @@ test('bypass passes the input through untouched', async ({ page }) => {
   expect(bypass).toBeLessThan(1e-7)
 })
 
+test('default high-pass strongly attenuates the recorded guitar', async ({ page }) => {
+  await page.goto('./')
+  const circuit = { resistance: 10000, capacitance: 1.38e-9 }
+  const { b0, b1, a1 } = audioCoefficients(circuit, RATE, 'resistor')
+  const result = await page.evaluate(async ({ b0, b1, a1, rate }) => {
+    const decode = new OfflineAudioContext(1, 1, rate)
+    const recording = await decode.decodeAudioData(await (await fetch(new URL('audio/guitar-f2.flac', location.href))).arrayBuffer())
+    async function levelDb(mix: number) {
+      const ctx = new OfflineAudioContext(1, rate * 3, rate)
+      await ctx.audioWorklet.addModule(new URL('rc-processor.js', location.href).href)
+      const filter = new AudioWorkletNode(ctx, 'rc-highpass', { outputChannelCount: [1] })
+      filter.parameters.get('b0')!.value = b0
+      filter.parameters.get('b1')!.value = b1
+      filter.parameters.get('a1')!.value = a1
+      filter.parameters.get('mix')!.value = mix
+      const source = ctx.createBufferSource(); source.buffer = recording
+      source.connect(filter).connect(ctx.destination); source.start()
+      const data = (await ctx.startRendering()).getChannelData(0)
+      let energy = 0
+      for (const value of data) energy += value * value
+      return 10 * Math.log10(energy / data.length)
+    }
+    return { dry: await levelDb(0), filtered: await levelDb(1) }
+  }, { b0, b1, a1, rate: RATE })
+  console.log('Default guitar level, dry vs high-pass:', result)
+  expect(Number.isFinite(result.dry)).toBe(true)
+  expect(Number.isFinite(result.filtered)).toBe(true)
+  expect(result.filtered - result.dry).toBeLessThan(-20)
+})
+
 test('the low-pass removes most of the guitar treble while bypass keeps it', async ({ page }) => {
   await page.goto('./')
   const circuit = { resistance: 10000, capacitance: 47e-9 }

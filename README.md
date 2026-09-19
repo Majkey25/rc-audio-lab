@@ -15,7 +15,7 @@ Two analysers, one before the filter and one after it, estimate the response of 
 ## Using the simulation
 
 - Switch the output tap between the capacitor and the resistor. Change R with the slider or the rotary control beside the resistor, change C, and inspect the cutoff and substituted equations.
-- Start the recorded guitar riff, then switch **A · Bypass** / **B · Filtered** while adjusting R or C. The default low-pass at 10 kΩ and 47 nF reduces the recording's treble. The second riff is the same recording transposed down an octave, a sine follows the frequency slider, and white noise drives the spectrum estimate.
+- Start the recorded guitar riff, then switch **A · Bypass** / **B · Filtered** while adjusting R or C. The default high-pass at 10 kΩ and 1.38 nF strongly attenuates the recording below its 11.5 kHz cutoff, making the A/B difference pronounced. The initial frequency is 306 Hz; this controls the sine and plot marker, not the recorded riff. The second riff is the same recording transposed down an octave, and white noise drives the spectrum estimate.
 - Select **Charging & energy** to inspect capacitor voltage, resistor voltage, current and energy. Pause, scrub time or jump directly to τ. Discharging retains the same voltage/current references, so resistor voltage and current are negative.
 - Open the component details for photographs and their credits. Keyboard arrows operate both sliders and the rotary control.
 
@@ -38,7 +38,7 @@ npx playwright install chromium firefox
 npm run test:e2e
 ```
 
-`check` runs TypeScript, Oxlint, Node's built-in physics tests and the production build. Browser tests exercise both languages, the controls, charging/discharging, audio A/B, mobile layout and reduced motion. They also render the production audio processor in `OfflineAudioContext` and compare its measured amplitude/phase with the mathematical response. The recorded-sample test processes the first three seconds of the original F2 recording, rather than the arranged riff, at unchanged gain. Four measurement high-pass stages at 2 kHz weight the result toward treble without imposing a sharp band boundary. The weighted mean-square level fell by about 16.4 dB with the default low-pass in the verified run; the test requires a reduction greater than 12 dB. This metric describes that recording and measurement method.
+`check` runs TypeScript, Oxlint, Node's built-in physics tests and the production build. Browser tests exercise both languages, the controls, charging/discharging, audio A/B, mobile layout and reduced motion. They also render the production audio processor in `OfflineAudioContext` and compare its measured amplitude/phase with the mathematical response. The recorded-sample tests process the first three seconds of the original F2 recording, rather than the arranged riff, at unchanged gain. The default high-pass must reduce the mean-square level by more than 20 dB. A separate test retains the 10 kΩ / 47 nF low-pass preset: four measurement high-pass stages at 2 kHz weight the result toward treble without imposing a sharp band boundary. The weighted mean-square level fell by about 16.4 dB in the verified run; that test requires a reduction greater than 12 dB. These metrics describe that recording and those measurement methods.
 
 ## Implementation
 
