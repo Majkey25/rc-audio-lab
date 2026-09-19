@@ -11,13 +11,19 @@ test('Czech default, complete language switch, stored preference', async ({ page
   await expect(page.getByRole('slider',{name:'Resistance R',exact:true})).toBeVisible()
   await page.reload()
   await expect(page.locator('html')).toHaveAttribute('lang','en')
-  await expect(page.getByTestId('cutoff')).toHaveText('339 Hz')
+  await expect(page.getByTestId('cutoff')).toHaveText('11.5 kHz')
+  await expect(page.getByRole('slider',{name:'Resistance R',exact:true})).toHaveAttribute('aria-valuetext','10 kΩ')
+  await expect(page.getByRole('slider',{name:'Capacitance C',exact:true})).toHaveAttribute('aria-valuetext','1.38 nF')
+  await expect(page.getByRole('slider',{name:'Frequency f',exact:true})).toHaveAttribute('aria-valuetext','306 Hz')
+  await expect(page.getByRole('button',{name:'resistor · high-pass'})).toHaveAttribute('aria-pressed','true')
+  await expect(page.getByRole('button',{name:'B · Filtered',exact:true})).toHaveAttribute('aria-pressed','true')
   expect(errors).toEqual([])
 })
 
 test('cutoff identity, presets, and knob share one circuit state', async ({ page }) => {
   await page.goto('./')
   await page.getByRole('button',{name:'Switch to English'}).click()
+  await page.getByRole('combobox',{name:'Educational preset'}).selectOption('1')
   await page.getByRole('button',{name:'Set f to cutoff frequency'}).click()
   await expect(page.getByTestId('gain')).toHaveText('-3.01 dB')
   await page.getByRole('combobox',{name:'Educational preset'}).selectOption('3')
@@ -45,6 +51,7 @@ test('cutoff identity, presets, and knob share one circuit state', async ({ page
 test('charging checkpoint, pause, discharge, zero voltage', async ({ page }) => {
   await page.goto('./')
   await page.getByRole('button',{name:'Switch to English'}).click()
+  await page.getByRole('combobox',{name:'Educational preset'}).selectOption('1')
   await page.getByRole('button',{name:'Charging & energy'}).click()
   await page.getByRole('button',{name:'Jump to τ'}).click()
   await expect(page.getByTestId('uc')).toHaveText('3.16 V')
