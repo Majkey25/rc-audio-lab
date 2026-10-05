@@ -5,6 +5,7 @@
 .site-header nav a { text-decoration: none; }
 .site-header nav a:hover { text-decoration: underline; }
 .language { font-size: 12px; padding: 7px 12px; }
+.site-footer { display: flex; flex-wrap: wrap; gap: 12px 28px; padding: 24px 32px; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; overflow-wrap: anywhere; }
 main { max-width: 1520px; margin: auto; padding: 30px 32px 40px; }
 .intro h1 { font-size: clamp(25px, 2.4vw, 35px); font-weight: 650; letter-spacing: -.8px; line-height: 1.2; margin-bottom: 10px; }
 .intro p { color: var(--muted); font-size: 15px; margin-bottom: 25px; }
